@@ -6,9 +6,8 @@ public class MainFrame extends JFrame {
     private JPanel mainPanel;
 
     public MainFrame() {
-        setTitle("Hello World");
+        super("Grade Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(mainPanel);
         pack();
     }
 }

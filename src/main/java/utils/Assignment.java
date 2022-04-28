@@ -53,4 +53,18 @@ public class Assignment {
         return grade + "/" + maxGrade;
     }
 
+    public void applySquareCurve() {
+        int boost = (int) Math.pow(maxGrade - grade, 2);
+        grade = Math.min(grade + boost, maxGrade);
+    }
+
+    public void applyLinearCurve(int boost) {
+        grade = Math.min(grade + boost, maxGrade);
+    }
+
+    public void applyPercentageCurve(double percentage) {
+        int boost = (int) (maxGrade * percentage);
+        grade = Math.min(grade + boost, maxGrade);
+    }
+
 }

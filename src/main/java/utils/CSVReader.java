@@ -8,7 +8,7 @@ import java.io.IOException;
 import java.io.Reader;
 
 public class CSVReader {
-    private String fileName;
+    private final String fileName;
 
     public CSVReader(String fileName) {
         this.fileName = fileName;

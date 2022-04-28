@@ -1,8 +1,8 @@
 package utils;
 
 public class Student {
-    private String name;
-    private int BUID;
+    private final String name;
+    private final int BUID;
 
     public Student(String name, int BUID) {
         this.name = name;
@@ -15,14 +15,6 @@ public class Student {
 
     public int getBUID() {
         return BUID;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setBUID(int BUID) {
-        this.BUID = BUID;
     }
 
     @Override

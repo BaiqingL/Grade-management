@@ -11,8 +11,8 @@ public class CourseTile {
 
     private boolean isSelected;
 
-    private String courseName;
-    private String courseSection;
+    private final String courseName;
+    private final String courseSection;
 
     public CourseTile(String name, String sec) {
         super();

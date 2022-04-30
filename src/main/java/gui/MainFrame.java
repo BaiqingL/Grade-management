@@ -1,6 +1,5 @@
 package gui;
 
-import javax.smartcardio.Card;
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -8,7 +7,7 @@ import java.beans.PropertyChangeListener;
 
 public class MainFrame extends JFrame {
 
-    private JPanel panelContainer;
+    public JPanel panelContainer;
     private CardLayout cl;
     private UserLogin userLogin;
     private CourseSelection courseSelection;

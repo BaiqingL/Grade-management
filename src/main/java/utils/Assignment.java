@@ -68,6 +68,6 @@ public class Assignment {
     }
 
     public String toString() {
-        return name + " (" + weight + "%)";
+        return name + " (" + weight + "%) " + getGradeString();
     }
 }

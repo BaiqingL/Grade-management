@@ -6,6 +6,8 @@ import org.apache.commons.csv.CSVRecord;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CSVReader {
     private final String fileName;
@@ -14,11 +16,14 @@ public class CSVReader {
         this.fileName = fileName;
     }
 
-    public void parse() throws IOException {
+
+    public List<CSVRecord> parse() throws IOException {
         Reader in = new FileReader(fileName);
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
+        List<CSVRecord> list = new ArrayList<>();
         for (CSVRecord record : records) {
-            System.out.println(record.stream().toList());
+            list.add(record);
         }
+        return list;
     }
 }

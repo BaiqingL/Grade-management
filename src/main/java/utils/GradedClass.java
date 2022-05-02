@@ -3,12 +3,14 @@ package utils;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Class {
+public class GradedClass {
 
     private final List<Student> students = new ArrayList<>();
     private final List<Assignment> assignments = new ArrayList<>();
 
-    public Class() {
+    public GradedClass(List<Student> students, List<Assignment> assignments) {
+        this.students.addAll(students);
+        this.assignments.addAll(assignments);
     }
 
     public List<Student> getStudents() {

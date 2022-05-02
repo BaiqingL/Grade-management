@@ -67,4 +67,7 @@ public class Assignment {
         grade = Math.min(grade + boost, maxGrade);
     }
 
+    public String toString() {
+        return name + " (" + weight + "%)";
+    }
 }

@@ -35,27 +35,37 @@ public class CSVReader {
         List<CSVRecord> records = csvReader.parse();
         List<Student> students = new ArrayList<>();
         List<Assignment> assignments = new ArrayList<>();
-        for (CSVRecord record : records) {
-            if (!record.get(STUDENT_NAME_INDEX).equals("Student Name")) {
-                Student student = new Student(record.get(STUDENT_NAME_INDEX), Integer.parseInt(record.get(BUID_INDEX)));
-                for (int i = 2; i < record.size(); i++) {
-                    Assignment assignment = assignments.get(i - 2);
-                    assignment.setGrade(Integer.parseInt(record.get(i)));
-                    student.addAssignment(assignment);
-                }
-                students.add(student);
-            } else {
-                for (int i = 2; i < record.size(); i++) {
-                    String[] seperated = record.get(i).split(" ", 2);
-                    String assignmentName = seperated[0];
 
-                    List<String> percents = Arrays.stream(seperated[1].substring(1, seperated[1].length() - 1).split(",", 2)).toList();
-                    int maxGrade = Integer.parseInt(percents.get(0));
-                    int weight = Integer.parseInt(percents.get(1).substring(1, percents.get(1).length() - 1));
-                    Assignment assignment = new Assignment(assignmentName, weight, maxGrade, 0);
-                    assignments.add(assignment);
-                }
+        // Get header record and parse all the assignments
+        CSVRecord header = records.get(0);
+        for (int i = 2; i < header.size(); i++) {
+            String[] seperated = header.get(i).split(" ", 2);
+            String assignmentName = seperated[0];
+
+            List<String> percents = Arrays.stream(seperated[1].substring(1, seperated[1].length() - 1).split(",", 2)).toList();
+            int maxGrade = Integer.parseInt(percents.get(0));
+            int weight = Integer.parseInt(percents.get(1).substring(1, percents.get(1).length() - 1));
+            Assignment assignment = new Assignment(assignmentName, weight, maxGrade, 0);
+            assignments.add(assignment);
+        }
+
+        // Remove the header record
+        records.remove(0);
+
+        // Process the rest of the student data
+        for (CSVRecord record : records) {
+            Student student = new Student(record.get(STUDENT_NAME_INDEX), Integer.parseInt(record.get(BUID_INDEX)));
+            for (int i = 2; i < record.size(); i++) {
+                Assignment assignment = assignments.get(i - 2);
+                Assignment studentAssignment = new Assignment(
+                        assignment.getName(),
+                        assignment.getWeight(),
+                        assignment.getMaxGrade(),
+                        Integer.parseInt(record.get(i)));
+                student.addAssignment(studentAssignment);
             }
+            students.add(student);
+
         }
         return new GradedClass(students, assignments);
     }

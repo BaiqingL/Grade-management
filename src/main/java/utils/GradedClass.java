@@ -21,6 +21,24 @@ public class GradedClass {
         return assignments;
     }
 
+    public void applySquareCurve(int assignmentIndex) {
+        for (Student student : students) {
+            student.getAssignments().get(assignmentIndex).applySquareCurve();
+        }
+    }
+
+    public void applyLinearCurve(int assignmentIndex, int amount) {
+        for (Student student : students) {
+            student.getAssignments().get(assignmentIndex).applyLinearCurve(amount);
+        }
+    }
+
+    public void applyPercentageCurve(int assignmentIndex, double percentage) {
+        for (Student student : students) {
+            student.getAssignments().get(assignmentIndex).applyPercentageCurve(percentage);
+        }
+    }
+
     public void addStudent(Student student) {
         students.add(student);
     }

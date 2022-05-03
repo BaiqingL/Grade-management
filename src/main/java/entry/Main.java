@@ -1,18 +1,11 @@
 package entry;
 
-import org.apache.commons.csv.CSVRecord;
-import utils.Assignment;
 import utils.CSVReader;
+import utils.CSVWriter;
 import utils.GradedClass;
 import utils.Student;
 
 import java.io.IOException;
-
-import utils.CSVReader;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -22,5 +15,6 @@ public class Main {
             System.out.println(student.getName());
             System.out.println(student.getAssignments());
         }
+        CSVWriter.writeGradedClass(gradedClass, "resources/grade_out.csv");
     }
 }

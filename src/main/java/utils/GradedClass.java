@@ -39,6 +39,59 @@ public class GradedClass {
         }
     }
 
+    public float getMeanGradeForAssignment(int assignmentIndex) {
+        float sum = 0;
+        for (Student student : students) {
+            sum += student.getAssignments().get(assignmentIndex).getGrade();
+        }
+        return sum / (float) students.size();
+    }
+
+    public int getMedianGradeForAssignment(int assignmentIndex) {
+        int[] grades = new int[students.size()];
+        int i = 0;
+        for (Student student : students) {
+            grades[i++] = student.getAssignments().get(assignmentIndex).getGrade();
+        }
+        return median(grades);
+    }
+
+    private int median(int[] grades) {
+        int[] copy = grades.clone();
+        java.util.Arrays.sort(copy);
+        return copy[copy.length / 2];
+    }
+
+    public int getLowestGradeForAssignment(int assignmentIndex) {
+        int[] grades = new int[students.size()];
+        int i = 0;
+        for (Student student : students) {
+            grades[i++] = student.getAssignments().get(assignmentIndex).getGrade();
+        }
+        return lowest(grades);
+    }
+
+    private int lowest(int[] grades) {
+        int[] copy = grades.clone();
+        java.util.Arrays.sort(copy);
+        return copy[0];
+    }
+
+    public int getHighestGradeForAssignment(int assignmentIndex) {
+        int[] grades = new int[students.size()];
+        int i = 0;
+        for (Student student : students) {
+            grades[i++] = student.getAssignments().get(assignmentIndex).getGrade();
+        }
+        return highest(grades);
+    }
+
+    private int highest(int[] grades) {
+        int[] copy = grades.clone();
+        java.util.Arrays.sort(copy);
+        return copy[copy.length - 1];
+    }
+
     public void addStudent(Student student) {
         students.add(student);
     }

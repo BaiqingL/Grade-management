@@ -17,8 +17,14 @@ public class CSVWriter {
         header.add("BUID");
         List<Assignment> assignments = gc.getAssignments();
         for (Assignment a : assignments) {
-            String assignmentFormat = a.getName() + " (" + a.getMaxGrade() + ", " + a.getWeight() + "%)";
+            String assignmentFormat = String.format("%s (%d, %d%%) (%s,%s)",
+                    a.getName(),
+                    a.getMaxGrade(),
+                    a.getWeight(),
+                    a.getAssignedDate(),
+                    a.getDueDate());
             header.add(assignmentFormat);
+            header.add("Submission Date");
         }
 
         // Start the student records
@@ -29,6 +35,7 @@ public class CSVWriter {
             studentRecord.add(String.valueOf(s.getBUID()));
             for (Assignment a : s.getAssignments()) {
                 studentRecord.add(String.valueOf(a.getGrade()));
+                studentRecord.add(String.valueOf(a.getSubmissionDate()));
             }
             studentRecords.add(studentRecord);
         }

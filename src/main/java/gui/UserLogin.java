@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UserLogin extends JFrame {
+public class UserLogin extends JPanel {
     private JPanel loginPanel;
     private JPanel title;
     private JButton loginButton;
@@ -17,9 +17,6 @@ public class UserLogin extends JFrame {
     protected boolean isAuthenticated;
 
     public UserLogin() {
-        super("Grade Calculator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
 
         this.isAuthenticated = false;
 

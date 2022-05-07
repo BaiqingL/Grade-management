@@ -68,6 +68,13 @@ public class Assignment {
         this.submissionDate = submissionDate;
     }
 
+    public boolean isAssignmentLate() {
+        if (submissionDate == null) {
+            return false;
+        }
+        return assignedDate.isAfter(dueDate);
+    }
+
     public int getMaxGrade() {
         return maxGrade;
     }

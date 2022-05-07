@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.CourseTile">
+  <grid id="27dc6" binding="tilePanel" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="30" right="30"/>
+    <constraints>
+      <xy x="20" y="20" width="884" height="704"/>
+    </constraints>
+    <properties/>
+    <border type="none">
+      <font/>
+    </border>
+    <children>
+      <component id="4d9ef" class="javax.swing.JButton" binding="courseTile">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Century Gothic" size="20" style="1"/>
+          <text value="courseName"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

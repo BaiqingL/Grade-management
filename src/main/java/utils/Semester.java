@@ -3,21 +3,21 @@ package utils;
 import java.util.List;
 
 public class Semester {
-    private final int year;
-    private final int semester;
+    private final String year;
+    private final String semester;
     private final List<Class> classes;
 
-    public Semester(int year, int semester, List<Class> classes) {
+    public Semester(String year, String semester, List<Class> classes) {
         this.year = year;
         this.semester = semester;
         this.classes = classes;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public int getSemester() {
+    public String getSemester() {
         return semester;
     }
 
@@ -34,6 +34,6 @@ public class Semester {
     }
 
     public String toString() {
-        return "Semester " + semester + ", " + year;
+        return semester + " " + year;
     }
 }

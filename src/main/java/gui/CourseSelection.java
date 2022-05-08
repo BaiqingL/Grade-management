@@ -1,5 +1,8 @@
 package gui;
 
+import utils.CSVReader;
+import utils.GradedClass;
+
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -10,6 +13,7 @@ import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Array;
+import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,17 +30,20 @@ public class CourseSelection extends JPanel {
     private final List<CourseTile> tiles;
     private boolean isLoggedIn;
 
+    private List<GradedClass> courses;
+
     private int count = 0;
 
     public CourseSelection() {
 
         this.isLoggedIn = true;
         tiles = new ArrayList<CourseTile>();
+        courses = new ArrayList<GradedClass>();
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                addCourse("CS611", "A" + count);
+                String filePath = "resources/611.csv";
+                addCourse(filePath);
                 count ++;
                 System.out.println(tiles.size() + " courses added");
 
@@ -76,23 +83,31 @@ public class CourseSelection extends JPanel {
 
     }
 
-    private void addCourse(String name, String sec) {
-        CourseTile ct = new CourseTile(name, sec, tiles.size());
+    private void addCourse(String filePath) {
+        try {
+            GradedClass course = CSVReader.loadCSV(filePath);
+            courses.add(course);
+        } catch (Exception e) {
+            System.out.println("Cannot read from" + filePath);
+        }
+        CourseTile ct = new CourseTile(courses.get(courses.size() - 1).toString(), tiles.size());
         ct.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
                 System.out.println("notified course selection page");
                 if (evt.getPropertyName().equals("isSelected")) {
-                    firePropertyChange("CourseSelected", null, tiles.get((int) evt.getNewValue()));
+                    firePropertyChange("CourseSelected", null, courses.get((int) evt.getNewValue()));
                 }
             }
         });
+
         tiles.add(ct);
     }
 
     private void deleteCourse(int idx) {
         CourseTile ct = tiles.remove(idx);
         courseTiles.remove(ct.getTilePanel());
+        courses.remove(idx);
     }
 
     private void loggout() {

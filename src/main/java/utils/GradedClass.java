@@ -1,5 +1,7 @@
 package utils;
 
+import com.google.common.primitives.Ints;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +10,20 @@ public class GradedClass {
     private final List<Student> students = new ArrayList<>();
     private final List<Assignment> assignments = new ArrayList<>();
 
-    public GradedClass(List<Student> students, List<Assignment> assignments) {
+    private String className;
+
+    public GradedClass(String className, List<Student> students, List<Assignment> assignments) {
+        this.className = className;
         this.students.addAll(students);
         this.assignments.addAll(assignments);
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String newClassName) {
+        this.className = newClassName;
     }
 
     public List<Student> getStudents() {
@@ -68,13 +81,7 @@ public class GradedClass {
         for (Student student : students) {
             grades[i++] = student.getAssignments().get(assignmentIndex).getGrade();
         }
-        return lowest(grades);
-    }
-
-    private int lowest(int[] grades) {
-        int[] copy = grades.clone();
-        java.util.Arrays.sort(copy);
-        return copy[0];
+        return Ints.min(grades);
     }
 
     public int getHighestGradeForAssignment(int assignmentIndex) {
@@ -83,13 +90,15 @@ public class GradedClass {
         for (Student student : students) {
             grades[i++] = student.getAssignments().get(assignmentIndex).getGrade();
         }
-        return highest(grades);
+        return Ints.max(grades);
     }
 
-    private int highest(int[] grades) {
-        int[] copy = grades.clone();
-        java.util.Arrays.sort(copy);
-        return copy[copy.length - 1];
+    public double getStandardDevForAssignment(int assignmentIndex) {
+        double sum = 0;
+        for (Student student : students) {
+            sum += Math.pow(student.getAssignments().get(assignmentIndex).getGrade() - getMeanGradeForAssignment(assignmentIndex), 2);
+        }
+        return Math.sqrt(sum / (double) students.size());
     }
 
     public void addStudent(Student student) {
@@ -98,5 +107,18 @@ public class GradedClass {
 
     public void addAssignment(Assignment assignment) {
         assignments.add(assignment);
+    }
+
+    public void removeStudentByBUID(int id) {
+        for (Student student : students) {
+            if (student.getBUID() == id) {
+                students.remove(student);
+                return;
+            }
+        }
+    }
+
+    public String toString() {
+        return this.className;
     }
 }

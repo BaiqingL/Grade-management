@@ -17,7 +17,7 @@ public class MainFrame extends JFrame {
     private UserLogin userLogin;
     private CourseSelection courseSelection;
     private SemesterSelection semesterSelection;
-    private State state;
+    private final State state;
 
     private AssignmentSelection assignmentSelection;
 
@@ -30,6 +30,7 @@ public class MainFrame extends JFrame {
 
     public MainFrame() {
         super("Grade Calculator");
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 

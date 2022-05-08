@@ -30,13 +30,17 @@
                     <preferred-size width="150" height="-1"/>
                   </grid>
                 </constraints>
-                <properties/>
+                <properties>
+                  <font name="SF Pro Display" size="16" style="1"/>
+                  <text value=""/>
+                </properties>
               </component>
               <component id="431f5" class="javax.swing.JLabel" binding="passwordLabel">
                 <constraints>
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
+                  <font name="SF Pro Display" size="18" style="1"/>
                   <labelFor value="a26cc"/>
                   <text value="Password: "/>
                 </properties>
@@ -48,6 +52,7 @@
                   </grid>
                 </constraints>
                 <properties>
+                  <font name="SF Pro Display" size="16" style="0"/>
                   <text value="Login"/>
                 </properties>
               </component>
@@ -81,8 +86,8 @@
                   <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font name="Century Gothic" size="26" style="1"/>
-                  <text value="Better Grade"/>
+                  <font name="SF Pro Display" size="26" style="1"/>
+                  <text value="Team 5 Grader"/>
                 </properties>
               </component>
             </children>

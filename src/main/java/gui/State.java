@@ -9,7 +9,7 @@ public class State {
     private final List<Semester> semesters = new ArrayList<>();
     private Semester selectedSemester;
 
-    public State(){
+    public State() {
         semesters.add(new Semester("2021", "Spring", new ArrayList<>()));
         semesters.add(new Semester("2021", "Fall", new ArrayList<>()));
         semesters.add(new Semester("2022", "Spring", new ArrayList<>()));

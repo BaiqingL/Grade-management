@@ -5,9 +5,9 @@ import java.util.List;
 public class Semester {
     private final String year;
     private final String semester;
-    private final List<Class> classes;
+    private final List<GradedClass> classes;
 
-    public Semester(String year, String semester, List<Class> classes) {
+    public Semester(String year, String semester, List<GradedClass> classes) {
         this.year = year;
         this.semester = semester;
         this.classes = classes;
@@ -21,15 +21,15 @@ public class Semester {
         return semester;
     }
 
-    public List<Class> getClasses() {
+    public List<GradedClass> getClasses() {
         return classes;
     }
 
-    public void addClass(Class c) {
+    public void addClass(GradedClass c) {
         classes.add(c);
     }
 
-    public void removeClass(Class c) {
+    public void removeClass(GradedClass c) {
         classes.remove(c);
     }
 

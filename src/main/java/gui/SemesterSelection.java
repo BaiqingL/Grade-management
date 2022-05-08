@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SemesterSelection extends JFrame{
@@ -14,6 +15,9 @@ public class SemesterSelection extends JFrame{
     private JPanel panel1;
     private JLabel title;
     private JButton selectSemesterBtn;
+    private JTextField semester;
+    private JTextField year;
+    private JButton addSemButton;
 
     private Semester selectedSemester = null;
 
@@ -51,6 +55,19 @@ public class SemesterSelection extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 State.selectedSemester = selectedSemester;
+                firePropertyChange("semesterSelected",false,true);
+            }
+        });
+
+        addSemButton = new JButton();
+        addSemButton.setText("Add");
+        addSemButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                assert !semester.getText().equals("") && !year.getText().equals("");
+                Semester newSem = new Semester(year.getText(), semester.getText(),new ArrayList<>());
+                System.out.println(newSem);
+                State.selectedSemester = newSem;
                 firePropertyChange("semesterSelected",false,true);
             }
         });

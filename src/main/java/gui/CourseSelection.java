@@ -8,6 +8,8 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.lang.reflect.Array;
@@ -23,8 +25,9 @@ public class CourseSelection extends JPanel {
     private JPanel courseActions;
     private JPanel courseTiles;
     private JPanel spacer;
+    private JLabel semester;
 
-    private List<CourseTile> tiles;
+    private final List<CourseTile> tiles;
     private boolean isLoggedIn;
 
     private List<GradedClass> courses;
@@ -78,7 +81,6 @@ public class CourseSelection extends JPanel {
             }
         });
 
-
     }
 
     private void addCourse(String filePath) {
@@ -117,5 +119,9 @@ public class CourseSelection extends JPanel {
         // TODO: place custom component creation code here
         courseTiles = new JPanel(new GridLayout(0,4));
         courseTiles.setBorder(new EmptyBorder(0,30,0,0));
+    }
+
+    public void setSemesterLabel(String semesterLabel) {
+        semester.setText(semesterLabel);
     }
 }

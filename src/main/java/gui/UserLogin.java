@@ -1,5 +1,11 @@
 package gui;
 
+import mdlaf.MaterialLookAndFeel;
+import mdlaf.animation.MaterialUIMovement;
+import mdlaf.components.button.MaterialButtonUI;
+import mdlaf.themes.MaterialLiteTheme;
+import mdlaf.utils.MaterialColors;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,8 +22,8 @@ public class UserLogin extends JPanel {
 
     protected boolean isAuthenticated;
 
-    public UserLogin() {
-
+    public UserLogin() throws UnsupportedLookAndFeelException {
+        UIManager.setLookAndFeel(new MaterialLookAndFeel(new MaterialLiteTheme()));
         this.isAuthenticated = false;
 
         loginButton.addActionListener(new ActionListener() {

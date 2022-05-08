@@ -1,8 +1,7 @@
 package gui;
 
-import utils.Semester;
-import org.checkerframework.checker.units.qual.C;
 import utils.GradedClass;
+import utils.Semester;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,13 +11,12 @@ import java.beans.PropertyChangeListener;
 
 public class MainFrame extends JFrame {
 
+    private final State state;
     public JPanel panelContainer;
     private CardLayout cl;
     private UserLogin userLogin;
     private CourseSelection courseSelection;
     private SemesterSelection semesterSelection;
-    private final State state;
-
     private AssignmentSelection assignmentSelection;
 
     private Assignment assignment;
@@ -39,16 +37,14 @@ public class MainFrame extends JFrame {
         this.setBounds(300, 300, 800, 600);
         this.setVisible(true);
 
+
         cl = (CardLayout) panelContainer.getLayout();
 
-        userLogin.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean isAuthenticated = (boolean) evt.getNewValue();
-                if (isAuthenticated) {
-                    semesterSelection.setSemestersList(state.getSemesters());
-                    cl.show(panelContainer, "semesterSelectionPage");
-                }
+        userLogin.addPropertyChangeListener(evt -> {
+            boolean isAuthenticated = (boolean) evt.getNewValue();
+            if (isAuthenticated) {
+                semesterSelection.setSemestersList(state.getSemesters());
+                cl.show(panelContainer, "semesterSelectionPage");
             }
         });
         semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
@@ -71,7 +67,7 @@ public class MainFrame extends JFrame {
                 if (evt.getPropertyName().equals("isLoggedIn")) {
                     boolean isLoggedIn = (boolean) evt.getNewValue();
                     if (!isLoggedIn) {
-                            userLogin.setLogout();
+                        userLogin.setLogout();
                         cl.show(panelContainer, "loginPage");
                     }
                 }
@@ -91,13 +87,13 @@ public class MainFrame extends JFrame {
                     course = (GradedClass) evt.getNewValue();
                     assignmentSelection = new AssignmentSelection(course);
                     assignmentSelection.setVisible(true);
-                    assignmentSelection.setLayout(new GridLayout(0,1));
+                    assignmentSelection.setLayout(new GridLayout(0, 1));
                     assignmentSelection.addPropertyChangeListener(new PropertyChangeListener() {
                         @Override
                         public void propertyChange(PropertyChangeEvent evt) {
                             if (evt.getPropertyName().equals("AssignmentSelected")) {
                                 System.out.println("notified main for create assignment page");
-                                assignmentIdx = (int)evt.getNewValue();
+                                assignmentIdx = (int) evt.getNewValue();
                                 System.out.println(assignmentIdx);
                                 assignment = new Assignment(course, assignmentIdx);
                                 assignment.setVisible(true);

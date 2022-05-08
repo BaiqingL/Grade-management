@@ -42,7 +42,14 @@ public class CourseSelection extends JPanel {
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String filePath = "resources/611.csv";
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                fileChooser.setDialogTitle("Select a CSV file");
+                String filePath = "";
+                int result = fileChooser.showOpenDialog(null);
+                if (result == JFileChooser.APPROVE_OPTION) {
+                    filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                }
                 addCourse(filePath);
                 count ++;
                 System.out.println(tiles.size() + " courses added");

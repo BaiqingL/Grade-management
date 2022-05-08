@@ -87,10 +87,8 @@ public class AssignmentSelection extends JPanel {
         List<Assignment> assignments = course.getAssignments();
         for (int i = 0; i < assignments.size(); i++) {
             Assignment a = assignments.get(i);
-            values[i] = new String[] {a.getName(), "release_data", "due_date", "num_submission"};
+            values[i] = new String[] {a.getName(), a.getAssignedDate().toString(), a.getDueDate().toString(), "num_submission"};
         }
-
-        course.get
 
         return values;
     }

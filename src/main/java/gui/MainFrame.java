@@ -29,8 +29,9 @@ public class MainFrame extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
-//        panelContainer.add(userLogin, "loginPage");
-//        panelContainer.add(courseSelection, "courseSelectionPage");
+        this.setContentPane(panelContainer);
+        this.setBounds(300, 300, 800, 600);
+        this.setVisible(true);
 
         cl = (CardLayout) panelContainer.getLayout();
 
@@ -146,15 +147,6 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-    }
-
-
-    public static void main(String[] args) {
-        MainFrame frame = new MainFrame();
-        System.out.println(frame.panelContainer.getComponentCount());
-        frame.setContentPane(frame.panelContainer);
-        frame.setBounds(300, 300, 800, 600);
-        frame.setVisible(true);
     }
 
     private void createUIComponents() {

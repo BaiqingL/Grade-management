@@ -1,12 +1,13 @@
 package gui;
 
+import utils.CSVWriter;
 import utils.GradedClass;
 import utils.Student;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.util.List;
 
 public class LetterGrades extends JPanel {
@@ -26,12 +27,30 @@ public class LetterGrades extends JPanel {
         this.course = course;
         courseName.setText(course.toString());
         this.add(panelContainer);
-        backButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                firePropertyChange("previousPage", null, null);
+        backButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
+        exportButton.addActionListener(e -> {
+            try {
+                exportGrades(e);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
+    }
+
+    private void exportGrades(ActionEvent e) throws IOException {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Select output location");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        // disable the "All files" option.
+        chooser.setAcceptAllFileFilterUsed(false);
+        if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            String directory = String.valueOf(chooser.getSelectedFile());
+            CSVWriter.writeFinalGrades(directory, course.getClassName(), getHeaders(), getValues());
+        }
+        else {
+            System.out.println("No Selection ");
+        }
     }
 
     private String[] getHeaders() {

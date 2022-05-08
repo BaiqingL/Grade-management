@@ -49,4 +49,15 @@ public class CSVWriter {
         csvPrinter.flush();
         csvPrinter.close();
     }
+
+    public static void writeFinalGrades(String outputFilePath, String outputFileName, String[] headers, String[][] data) throws IOException {
+        String fileOutName = outputFilePath + "/" + outputFileName + ".csv";
+        CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(fileOutName), CSVFormat.DEFAULT);
+        csvPrinter.printRecord(headers);
+        for (String[] row : data) {
+            csvPrinter.printRecord(row);
+        }
+        csvPrinter.flush();
+        csvPrinter.close();
+    }
 }

@@ -54,7 +54,7 @@
               <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Add new semester"/>
+              <text value="New Semester"/>
             </properties>
           </component>
           <component id="e394f" class="javax.swing.JTextField" binding="semester">

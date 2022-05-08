@@ -114,6 +114,6 @@ public class Assignment {
     }
 
     public String toString() {
-        return name + " (" + weight + "%)" + " Assigned: " + assignedDate + " Due: " + dueDate + " Submitted: " + submissionDate + " Grade: " + getGradeString();
+        return "Assignment Name: " + name + " (" + weight + "%)" + " Assigned: " + assignedDate + " Due: " + dueDate + " Submitted: " + submissionDate + " Grade: " + getGradeString();
     }
 }

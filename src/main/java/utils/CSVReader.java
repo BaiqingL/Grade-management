@@ -54,7 +54,6 @@ public class CSVReader {
                 student.addAssignment(studentAssignment);
                 // Increment assignment index to check next assignment
                 assignmentIndex++;
-                System.out.println(studentAssignment);
             }
             // Add student to general list
             students.add(student);

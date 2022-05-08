@@ -17,7 +17,7 @@
           <card name="courseSelectPage"/>
         </constraints>
       </nested-form>
-            <nested-form id="we12" form-file="gui/semesterSelection.form" binding="semesterSelection">
+            <nested-form id="we12" form-file="gui/SemesterSelection.form" binding="semesterSelection">
         <constraints>
           <card name="semesterSelectionPage"/>
         </constraints>

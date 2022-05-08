@@ -1,5 +1,8 @@
 package gui;
 
+import org.checkerframework.checker.units.qual.C;
+import utils.GradedClass;
+
 import javax.swing.*;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
@@ -16,6 +19,9 @@ public class MainFrame extends JFrame {
         super("Grade Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
+
+//        panelContainer.add(userLogin, "loginPage");
+//        panelContainer.add(courseSelection, "courseSelectionPage");
 
         cl = (CardLayout) panelContainer.getLayout();
 
@@ -50,15 +56,16 @@ public class MainFrame extends JFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("CourseSelected")) {
                     System.out.println("notified main");
-                    System.out.println(panelContainer.getComponents());
-                    panelContainer.add(((CourseTile)evt.getNewValue()).toString(), new AssignmentSelection());
-                    cl.addLayoutComponent(((CourseTile)evt.getNewValue()).toString(), new AssignmentSelection());
-                    System.out.println(((CourseTile)evt.getNewValue()).toString());
+                    System.out.println(panelContainer.getComponentCount());
+                    panelContainer.add(((GradedClass)evt.getNewValue()).toString(), new AssignmentSelection((GradedClass) evt.getNewValue()));
+                    cl.addLayoutComponent(((GradedClass)evt.getNewValue()).toString(), new AssignmentSelection((GradedClass) evt.getNewValue()));
+                    System.out.println(((GradedClass)evt.getNewValue()).toString());
                     panelContainer.revalidate();
                     panelContainer.updateUI();
                     cl = (CardLayout) panelContainer.getLayout();
-                    System.out.println(panelContainer.getComponents());
-                    cl.show(panelContainer, ((CourseTile)evt.getNewValue()).toString());
+                    System.out.println(panelContainer.getComponentCount());
+                    cl.show(panelContainer, ((GradedClass)evt.getNewValue()).toString());
+                    pack();
                 }
             }
         });
@@ -67,6 +74,7 @@ public class MainFrame extends JFrame {
 
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
+        System.out.println(frame.panelContainer.getComponentCount());
         frame.setContentPane(frame.panelContainer);
         frame.setBounds(300, 300, 800, 600);
         frame.setVisible(true);
@@ -74,6 +82,8 @@ public class MainFrame extends JFrame {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
+//        userLogin = new UserLogin();
+//        courseSelection = new CourseSelection();
         panelContainer = new JPanel(new CardLayout());
     }
 }

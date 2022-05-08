@@ -1,5 +1,8 @@
 package gui;
 
+import utils.Assignment;
+import utils.GradedClass;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -7,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class AssignmentSelection extends JPanel {
     private JPanel AssignmentPanel;
@@ -23,10 +27,13 @@ public class AssignmentSelection extends JPanel {
 
     private boolean isLoggedIn;
 
-    public AssignmentSelection() {
+    private GradedClass course;
+
+    public AssignmentSelection(GradedClass course) {
         //TODO: overload constructor to load data from csv
 
         this.isLoggedIn = true;
+        this.course = course;
         initTable();
 
         Assignments.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
@@ -56,6 +63,7 @@ public class AssignmentSelection extends JPanel {
                 loggout();
             }
         });
+        this.setVisible(true);
         System.out.println("Assignment Selection page created");
     }
 
@@ -75,10 +83,13 @@ public class AssignmentSelection extends JPanel {
     }
 
     private String[][] getValue() {
-        String[][] values = {
-                {"Assignment 1", "March 19, 2022", "April 19, 2022", "198"},
-                {"Assignment 2", "March 19, 2022", "April 19, 2022", "201"},
-        };
+        String[][] values = new String[course.getAssignments().size()][4];
+        List<Assignment> assignments = course.getAssignments();
+        for (int i = 0; i < assignments.size(); i++) {
+            Assignment a = assignments.get(i);
+            values[i] = new String[] {a.getName(), "release_data", "due_date", "num_submission"};
+        }
+
 
         return values;
     }

@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -15,12 +14,14 @@ import java.util.List;
 public class AssignmentSelection extends JPanel {
     private JPanel AssignmentPanel;
     private JPanel spacer;
-    private JPanel AssignmentTile;
+    private JScrollPane AssignmentTile;
     private JPanel AssignmentAction;
     private JButton addAssignmentButton;
     private JButton logoutButton;
     private JButton editAssignmentButton;
     private JTable Assignments;
+    private JButton showLetterGradeButton;
+    private JLabel courseName;
 
     private DefaultTableModel model;
 
@@ -34,12 +35,16 @@ public class AssignmentSelection extends JPanel {
 
         this.isLoggedIn = true;
         this.course = course;
-        initTable();
+
+        courseName.setText(course.toString());
 
         Assignments.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             @Override
             public void valueChanged(ListSelectionEvent e) {
-                System.out.println(Assignments.getValueAt(Assignments.getSelectedRow(), 0).toString());
+                // prevent the following function being called twice
+                if (!e.getValueIsAdjusting() && Assignments.getSelectedRow() != -1 ) {
+                    firePropertyChange("AssignmentSelected", null, Assignments.getSelectedRow());
+                }
             }
         });
         addAssignmentButton.addActionListener(new ActionListener() {
@@ -55,26 +60,28 @@ public class AssignmentSelection extends JPanel {
                 if (removeAt >= 0) {
                     model.removeRow(removeAt);
                 }
+                Assignments = new JTable(model);
+                Assignments.updateUI();
+                AssignmentTile.revalidate();
+                AssignmentTile.updateUI();
             }
         });
         logoutButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                loggout();
+                firePropertyChange("previousPage", null, null);
             }
         });
+
         this.setVisible(true);
+        this.add(AssignmentPanel);
         System.out.println("Assignment Selection page created");
-    }
-
-    private void initTable() {
-        model = new DefaultTableModel(getValue(), getHeader());
-        Assignments = new JTable(model);
-    }
-
-    private void loggout() {
-        this.isLoggedIn = false;
-        firePropertyChange("isLoggedIn", true, false);
+        showLetterGradeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firePropertyChange("LetterGradeSelected", null, null);
+            }
+        });
     }
 
     private String[] createAssignment() {
@@ -100,6 +107,8 @@ public class AssignmentSelection extends JPanel {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        AssignmentTile = new JPanel(new ScrollPaneLayout());
+        AssignmentTile = new JScrollPane();
+        model = new DefaultTableModel(getValue(), getHeader());
+        Assignments = new JTable(model);
     }
 }

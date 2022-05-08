@@ -5,11 +5,13 @@ import utils.Student;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class Assignment extends JPanel {
     private JPanel assignmentContainer;
-    private JPanel gradeContainer;
+    private JScrollPane gradeContainer;
     private JPanel statistic;
     private JPanel statMin;
     private JLabel min;
@@ -30,6 +32,7 @@ public class Assignment extends JPanel {
     private JLabel medianVal;
     private JLabel meanVal;
     private JLabel stdVal;
+    private JLabel assignmentName;
 
     private DefaultTableModel model;
 
@@ -39,9 +42,18 @@ public class Assignment extends JPanel {
     public Assignment(GradedClass course, int assignmentIdx) {
         this.course = course;
         this.assignmentIdx = assignmentIdx;
-        updateStats();
-        initTable();
 
+        updateStats();
+        assignmentName.setText(course.getAssignments().get(assignmentIdx).getName());
+
+        this.add(assignmentContainer);
+
+        back.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                firePropertyChange("previousPage", null, null);
+            }
+        });
     }
 
     private void setStats(JLabel label, String val) {
@@ -54,11 +66,6 @@ public class Assignment extends JPanel {
         setStats(medianVal, String.valueOf(course.getMedianGradeForAssignment(assignmentIdx)));
         setStats(meanVal, String.valueOf(course.getMeanGradeForAssignment(assignmentIdx)));
         setStats(stdVal, String.valueOf(course.getStandardDevForAssignment(assignmentIdx)));
-    }
-
-    private void initTable() {
-        model = new DefaultTableModel(getValue(), getHeader());
-        grades = new JTable(model);
     }
 
     private String[] getHeader() {
@@ -82,6 +89,14 @@ public class Assignment extends JPanel {
 
     private void createUIComponents() {
         // TODO: place custom component creation code here
-        gradeContainer = new JPanel(new ScrollPaneLayout());
+        gradeContainer = new JScrollPane();
+        model = new DefaultTableModel(getValue(), getHeader());
+        grades = new JTable(model);
+
+        minVal = new JLabel(String.valueOf(course.getLowestGradeForAssignment(assignmentIdx)));
+        maxVal = new JLabel(String.valueOf(course.getHighestGradeForAssignment(assignmentIdx)));
+        medianVal = new JLabel(String.valueOf(course.getMedianGradeForAssignment(assignmentIdx)));
+        meanVal = new JLabel(String.valueOf(course.getMeanGradeForAssignment(assignmentIdx)));
+        stdVal = new JLabel(String.valueOf(course.getStandardDevForAssignment(assignmentIdx)));
     }
 }

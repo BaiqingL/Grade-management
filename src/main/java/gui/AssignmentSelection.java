@@ -90,6 +90,7 @@ public class AssignmentSelection extends JPanel {
             values[i] = new String[] {a.getName(), "release_data", "due_date", "num_submission"};
         }
 
+        course.get
 
         return values;
     }

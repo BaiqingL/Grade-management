@@ -39,8 +39,8 @@ public class CourseSelection extends JPanel {
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
-                addCourse("CS611", "A" + count);
+                String filePath = "resources/611.csv";
+                addCourse(filePath);
                 count ++;
                 System.out.println(tiles.size() + " courses added");
 
@@ -81,9 +81,14 @@ public class CourseSelection extends JPanel {
 
     }
 
-    private void addCourse(String name, String sec) {
-        String filePath = "resources/grade.csv";
-        CourseTile ct = new CourseTile(name, sec, tiles.size());
+    private void addCourse(String filePath) {
+        try {
+            GradedClass course = CSVReader.loadCSV(filePath);
+            courses.add(course);
+        } catch (Exception e) {
+            System.out.println("Cannot read from" + filePath);
+        }
+        CourseTile ct = new CourseTile(courses.get(courses.size() - 1).toString(), tiles.size());
         ct.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -93,13 +98,6 @@ public class CourseSelection extends JPanel {
                 }
             }
         });
-
-        try {
-            GradedClass course = CSVReader.loadCSV(filePath);
-            courses.add(course);
-        } catch (Exception e) {
-            System.out.println("Cannot read from" + filePath);
-        }
 
         tiles.add(ct);
     }

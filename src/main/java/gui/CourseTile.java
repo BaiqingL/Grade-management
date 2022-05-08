@@ -14,16 +14,14 @@ public class CourseTile extends JPanel {
     private String courseName;
 
     private int idx;
-    private String courseSection;
 
-    public CourseTile(String name, String sec, int idx) {
+    public CourseTile(String name, int idx) {
         super();
         this.courseName = name;
-        this.courseSection = sec;
         this.idx = idx;
         this.isSelected = false;
 
-        courseTile.setText(this.courseName + " " + this.courseSection);
+        courseTile.setText(this.courseName);
 
         courseTile.setVisible(true);
 
@@ -36,7 +34,7 @@ public class CourseTile extends JPanel {
         courseTile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("selected course " + courseName + " " + courseSection);
+                System.out.println("selected course " + courseName);
                 setSelected();
             }
         });
@@ -54,7 +52,7 @@ public class CourseTile extends JPanel {
     }
 
     public String toString() {
-        return this.courseName + " " + this.courseSection;
+        return this.courseName;
     }
 
 }

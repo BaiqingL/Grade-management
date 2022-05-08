@@ -117,4 +117,8 @@ public class GradedClass {
             }
         }
     }
+
+    public String toString() {
+        return this.className;
+    }
 }

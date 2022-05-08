@@ -92,11 +92,28 @@ public class GradedClass {
         return copy[copy.length - 1];
     }
 
+    public double getStandardDevForAssignment(int assignmentIndex) {
+        double sum = 0;
+        for (Student student : students) {
+            sum += Math.pow(student.getAssignments().get(assignmentIndex).getGrade() - getMeanGradeForAssignment(assignmentIndex), 2);
+        }
+        return Math.sqrt(sum / (double) students.size());
+    }
+
     public void addStudent(Student student) {
         students.add(student);
     }
 
     public void addAssignment(Assignment assignment) {
         assignments.add(assignment);
+    }
+
+    public void removeStudentByBUID(int id) {
+        for (Student student : students) {
+            if (student.getBUID() == id) {
+                students.remove(student);
+                return;
+            }
+        }
     }
 }

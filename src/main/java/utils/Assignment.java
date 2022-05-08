@@ -1,16 +1,27 @@
 package utils;
 
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
+
 public class Assignment {
     private String name;
     private int weight;
     private int maxGrade;
     private int grade;
 
-    public Assignment(String name, int weight, int maxGrade, int grade) {
+    private LocalDate assignedDate;
+    private LocalDate dueDate;
+    private LocalDate submissionDate;
+
+    public Assignment(String name, int weight, int maxGrade, int grade, LocalDate assignedDate, LocalDate dueDate, LocalDate submissionDate) {
         this.name = name;
         this.weight = weight;
         this.maxGrade = maxGrade;
         this.grade = grade;
+        this.assignedDate = assignedDate;
+        this.dueDate = dueDate;
+        this.submissionDate = submissionDate;
     }
 
     public String getName() {
@@ -27,6 +38,41 @@ public class Assignment {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public LocalDate getAssignedDate() {
+        return assignedDate;
+    }
+
+    public LocalDate getDueDate() {
+        return dueDate;
+    }
+
+    public LocalDate getSubmissionDate() {
+        return submissionDate;
+    }
+
+    public boolean isSubmittedLate() {
+        return submissionDate.isAfter(dueDate);
+    }
+
+    public void setAssignedDate(LocalDate assignedDate) {
+        this.assignedDate = assignedDate;
+    }
+
+    public void setDueDate(LocalDate dueDate) {
+        this.dueDate = dueDate;
+    }
+
+    public void setSubmissionDate(LocalDate submissionDate) {
+        this.submissionDate = submissionDate;
+    }
+
+    public boolean isAssignmentLate() {
+        if (submissionDate == null) {
+            return false;
+        }
+        return assignedDate.isAfter(dueDate);
     }
 
     public int getMaxGrade() {
@@ -68,6 +114,6 @@ public class Assignment {
     }
 
     public String toString() {
-        return name + " (" + weight + "%) " + getGradeString();
+        return name + " (" + weight + "%)" + " Assigned: " + assignedDate + " Due: " + dueDate + " Submitted: " + submissionDate + " Grade: " + getGradeString();
     }
 }

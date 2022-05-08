@@ -37,56 +37,45 @@ public class CourseSelection extends JPanel {
     public CourseSelection() {
 
         this.isLoggedIn = true;
-        tiles = new ArrayList<CourseTile>();
-        courses = new ArrayList<GradedClass>();
-        addCourseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JFileChooser fileChooser = new JFileChooser();
-                fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                fileChooser.setDialogTitle("Select a CSV file");
-                String filePath = "";
-                int result = fileChooser.showOpenDialog(null);
-                if (result == JFileChooser.APPROVE_OPTION) {
-                    filePath = fileChooser.getSelectedFile().getAbsolutePath();
-                }
-                addCourse(filePath);
-                count ++;
-                System.out.println(tiles.size() + " courses added");
+        tiles = new ArrayList<>();
+        courses = new ArrayList<>();
+        addCourseButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setDialogTitle("Select a CSV file");
+            String filePath = "";
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            }
+            addCourse(filePath);
+            count ++;
+            System.out.println(tiles.size() + " courses added");
 
-                courseTiles.removeAll();
+            courseTiles.removeAll();
 
-                for (CourseTile ct : tiles) {
-                    courseTiles.add(ct.getTilePanel());
+            for (CourseTile ct : tiles) {
+                courseTiles.add(ct.getTilePanel());
 //                    courseTiles.add(new JLabel("This is a Course"));
-                }
-
-                courseTiles.revalidate();
-                courseTiles.updateUI();
-                firePropertyChange("GUIupdate", 0, 0);
             }
+
+            courseTiles.revalidate();
+            courseTiles.updateUI();
+            firePropertyChange("GUIupdate", 0, 0);
         });
-        editCourseButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                System.out.println(tiles.size() + " courses left");
+        editCourseButton.addActionListener(e -> {
+            System.out.println(tiles.size() + " courses left");
 
-                if (tiles.size() > 0) {
-                    deleteCourse(0);
-                }
-
-                courseTiles.revalidate();
-                courseTiles.updateUI();
-                firePropertyChange("GUIupdate", 0, 0);
-
+            if (tiles.size() > 0) {
+                deleteCourse(0);
             }
+
+            courseTiles.revalidate();
+            courseTiles.updateUI();
+            firePropertyChange("GUIupdate", 0, 0);
+
         });
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                loggout();
-            }
-        });
+        logoutButton.addActionListener(e -> loggout());
 
     }
 
@@ -98,13 +87,10 @@ public class CourseSelection extends JPanel {
             System.out.println("Cannot read from" + filePath);
         }
         CourseTile ct = new CourseTile(courses.get(courses.size() - 1).toString(), tiles.size());
-        ct.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                System.out.println("notified course selection page");
-                if (evt.getPropertyName().equals("isSelected")) {
-                    firePropertyChange("CourseSelected", null, courses.get((int) evt.getNewValue()));
-                }
+        ct.addPropertyChangeListener(evt -> {
+            System.out.println("notified course selection page");
+            if (evt.getPropertyName().equals("isSelected")) {
+                firePropertyChange("CourseSelected", null, courses.get((int) evt.getNewValue()));
             }
         });
 

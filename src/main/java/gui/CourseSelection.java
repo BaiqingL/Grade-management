@@ -32,7 +32,6 @@ public class CourseSelection extends JPanel {
 
         this.isLoggedIn = true;
         tiles = new ArrayList<CourseTile>();
-        System.out.println(State.selectedSemester);
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,7 @@
 package gui;
 
+import utils.Semester;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ContainerAdapter;
@@ -13,11 +15,14 @@ public class MainFrame extends JFrame {
     private UserLogin userLogin;
     private CourseSelection courseSelection;
     private SemesterSelection semesterSelection;
+    private State state;
 
     public MainFrame() {
         super("Grade Calculator");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
+
+        this.state = new State();
 
         cl = (CardLayout) panelContainer.getLayout();
 
@@ -26,10 +31,25 @@ public class MainFrame extends JFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 boolean isAuthenticated = (boolean) evt.getNewValue();
                 if (isAuthenticated) {
+                    semesterSelection.setSemestersList(state.getSemesters());
                     cl.show(panelContainer, "semesterSelectionPage");
                 }
             }
         });
+        semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("semesterSelected")) {
+                    state.setSelectedSemester((Semester) evt.getNewValue());
+                } else if (evt.getPropertyName().equals("newSemesterAdded")) {
+                    state.addSemester((Semester) evt.getNewValue());
+                    state.setSelectedSemester((Semester) evt.getNewValue());
+                }
+                courseSelection.setSemesterLabel(state.getSelectedSemester().toString());
+                cl.show(panelContainer, "courseSelectPage");
+            }
+        });
+
         courseSelection.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -43,16 +63,6 @@ public class MainFrame extends JFrame {
 
                 if (evt.getPropertyName().equals("GUIupdate")) {
                     pack();
-                }
-            }
-        });
-        semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                boolean selected = (boolean) evt.getNewValue();
-                if (selected) {
-                    courseSelection.setSemesterLabel(State.selectedSemester.toString());
-                    cl.show(panelContainer, "courseSelectPage");
                 }
             }
         });
@@ -76,14 +86,6 @@ public class MainFrame extends JFrame {
                 }
             }
         });
-    }
-
-
-    public static void main(String[] args) {
-        MainFrame frame = new MainFrame();
-        frame.setContentPane(frame.panelContainer);
-        frame.setBounds(300, 300, 800, 600);
-        frame.setVisible(true);
     }
 
     private void createUIComponents() {

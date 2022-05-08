@@ -19,7 +19,7 @@ public class SemesterSelection extends JFrame{
     private JTextField semester;
     private JTextField year;
     private JButton addSemButton;
-    private State state;
+    private List<Semester> semestersList;
 
     private Semester selectedSemester = null;
 
@@ -28,26 +28,8 @@ public class SemesterSelection extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
-        this.state = new State();
 
         title.setText("Select semester");
-
-
-        List<Semester> semesterList = state.getSemesters();
-        selectedSemester = semesterList.get(0);
-        for (Semester sem : semesterList) {
-            semesters.addItem(sem);
-        }
-        semesters.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                selectedSemester = (Semester) e.getItem();
-            }
-        });
-
-
-
-
     }
 
     private void createUIComponents() {
@@ -57,8 +39,7 @@ public class SemesterSelection extends JFrame{
         selectSemesterBtn.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                State.selectedSemester = selectedSemester;
-                firePropertyChange("semesterSelected",false,true);
+                firePropertyChange("semesterSelected",null,selectedSemester);
             }
         });
 
@@ -69,9 +50,22 @@ public class SemesterSelection extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 assert !semester.getText().equals("") && !year.getText().equals("");
                 Semester newSem = new Semester(year.getText(), semester.getText(),new ArrayList<>());
-                state.addSemester(newSem);
-                State.selectedSemester = newSem;
-                firePropertyChange("semesterSelected",false,true);
+                firePropertyChange("newSemesterAdded",null,newSem);
+                firePropertyChange("semesterSelected",null,newSem);
+            }
+        });
+    }
+
+    public void setSemestersList(List<Semester> semestersList) {
+        this.semestersList = semestersList;
+        selectedSemester = semestersList.get(0);
+        for (Semester sem : semestersList) {
+            semesters.addItem(sem);
+        }
+        semesters.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent e) {
+                selectedSemester = (Semester) e.getItem();
             }
         });
 

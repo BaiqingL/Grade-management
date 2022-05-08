@@ -1,5 +1,6 @@
 package gui;
 
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
 import utils.Semester;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ public class SemesterSelection extends JFrame{
     private JTextField semester;
     private JTextField year;
     private JButton addSemButton;
+    private State state;
 
     private Semester selectedSemester = null;
 
@@ -26,12 +28,13 @@ public class SemesterSelection extends JFrame{
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
-        State state = new State();
+        this.state = new State();
 
         title.setText("Select semester");
 
 
         List<Semester> semesterList = state.getSemesters();
+        selectedSemester = semesterList.get(0);
         for (Semester sem : semesterList) {
             semesters.addItem(sem);
         }
@@ -66,7 +69,7 @@ public class SemesterSelection extends JFrame{
             public void actionPerformed(ActionEvent e) {
                 assert !semester.getText().equals("") && !year.getText().equals("");
                 Semester newSem = new Semester(year.getText(), semester.getText(),new ArrayList<>());
-                System.out.println(newSem);
+                state.addSemester(newSem);
                 State.selectedSemester = newSem;
                 firePropertyChange("semesterSelected",false,true);
             }

@@ -5,11 +5,15 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CourseSelection extends JFrame {
+public class CourseSelection extends JPanel {
     private JPanel coursePanel;
     private JButton addCourseButton;
     private JButton editCourseButton;
@@ -17,6 +21,7 @@ public class CourseSelection extends JFrame {
     private JPanel courseActions;
     private JPanel courseTiles;
     private JPanel spacer;
+    private JLabel semester;
 
     private final List<CourseTile> tiles;
     private boolean isLoggedIn;
@@ -24,12 +29,10 @@ public class CourseSelection extends JFrame {
     private int count = 0;
 
     public CourseSelection() {
-        super("Grade Calculator");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        pack();
 
         this.isLoggedIn = true;
         tiles = new ArrayList<CourseTile>();
+        System.out.println(State.selectedSemester);
         addCourseButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -75,7 +78,16 @@ public class CourseSelection extends JFrame {
     }
 
     private void addCourse(String name, String sec) {
-        CourseTile ct = new CourseTile(name, sec);
+        CourseTile ct = new CourseTile(name, sec, tiles.size());
+        ct.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                System.out.println("notified course selection page");
+                if (evt.getPropertyName().equals("isSelected")) {
+                    firePropertyChange("CourseSelected", null, tiles.get((int) evt.getNewValue()));
+                }
+            }
+        });
         tiles.add(ct);
     }
 
@@ -93,5 +105,9 @@ public class CourseSelection extends JFrame {
         // TODO: place custom component creation code here
         courseTiles = new JPanel(new GridLayout(0,4));
         courseTiles.setBorder(new EmptyBorder(0,30,0,0));
+    }
+
+    public void setSemesterLabel(String semesterLabel) {
+        semester.setText(semesterLabel);
     }
 }

@@ -5,19 +5,22 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class CourseTile {
+public class CourseTile extends JPanel {
     private JButton courseTile;
     private JPanel tilePanel;
 
     private boolean isSelected;
 
-    private final String courseName;
-    private final String courseSection;
+    private String courseName;
 
-    public CourseTile(String name, String sec) {
+    private int idx;
+    private String courseSection;
+
+    public CourseTile(String name, String sec, int idx) {
         super();
         this.courseName = name;
         this.courseSection = sec;
+        this.idx = idx;
         this.isSelected = false;
 
         courseTile.setText(this.courseName + " " + this.courseSection);
@@ -33,7 +36,7 @@ public class CourseTile {
         courseTile.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println("selected course" + courseName + " " + courseSection);
+                System.out.println("selected course " + courseName + " " + courseSection);
                 setSelected();
             }
         });
@@ -41,13 +44,17 @@ public class CourseTile {
 
     private void setSelected() {
 
-        tilePanel.firePropertyChange("isSelected", this.isSelected, !this.isSelected);
+        this.firePropertyChange("isSelected", -1, idx);
         this.isSelected = !this.isSelected;
 
     }
 
     public JPanel getTilePanel() {
         return this.tilePanel;
+    }
+
+    public String toString() {
+        return this.courseName + " " + this.courseSection;
     }
 
 }

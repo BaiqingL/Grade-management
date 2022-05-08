@@ -21,7 +21,6 @@ public class MainFrame extends JFrame {
 
         cl = (CardLayout) panelContainer.getLayout();
 
-
         userLogin.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -52,13 +51,33 @@ public class MainFrame extends JFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 boolean selected = (boolean) evt.getNewValue();
                 if (selected) {
+                    courseSelection.setSemesterLabel(State.selectedSemester.toString());
                     cl.show(panelContainer, "courseSelectPage");
                 }
             }
         });
         panelContainer.addContainerListener(new ContainerAdapter() {
         });
+
+        courseSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("CourseSelected")) {
+                    System.out.println("notified main");
+                    System.out.println(panelContainer.getComponents());
+                    panelContainer.add(((CourseTile)evt.getNewValue()).toString(), new AssignmentSelection());
+                    cl.addLayoutComponent(((CourseTile)evt.getNewValue()).toString(), new AssignmentSelection());
+                    System.out.println(((CourseTile)evt.getNewValue()).toString());
+                    panelContainer.revalidate();
+                    panelContainer.updateUI();
+                    cl = (CardLayout) panelContainer.getLayout();
+                    System.out.println(panelContainer.getComponents());
+                    cl.show(panelContainer, ((CourseTile)evt.getNewValue()).toString());
+                }
+            }
+        });
     }
+
 
     public static void main(String[] args) {
         MainFrame frame = new MainFrame();
@@ -67,4 +86,8 @@ public class MainFrame extends JFrame {
         frame.setVisible(true);
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+        panelContainer = new JPanel(new CardLayout());
+    }
 }

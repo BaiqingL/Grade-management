@@ -18,4 +18,8 @@ public class State {
     public List<Semester> getSemesters() {
         return semesters;
     }
+
+    public void addSemester(Semester semester) {
+        this.semesters.add(semester);
+    }
 }

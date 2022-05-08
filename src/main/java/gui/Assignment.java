@@ -48,12 +48,7 @@ public class Assignment extends JPanel {
 
         this.add(assignmentContainer);
 
-        back.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                firePropertyChange("previousPage", null, null);
-            }
-        });
+        back.addActionListener(e -> firePropertyChange("previousPage", null, null));
     }
 
     private void setStats(JLabel label, String val) {

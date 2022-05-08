@@ -38,50 +38,29 @@ public class AssignmentSelection extends JPanel {
 
         courseName.setText(course.toString());
 
-        Assignments.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent e) {
-                // prevent the following function being called twice
-                if (!e.getValueIsAdjusting() && Assignments.getSelectedRow() != -1 ) {
-                    firePropertyChange("AssignmentSelected", null, Assignments.getSelectedRow());
-                }
+        Assignments.getSelectionModel().addListSelectionListener(e -> {
+            // prevent the following function being called twice
+            if (!e.getValueIsAdjusting() && Assignments.getSelectedRow() != -1 ) {
+                firePropertyChange("AssignmentSelected", null, Assignments.getSelectedRow());
             }
         });
-        addAssignmentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                model.addRow(createAssignment());
+        addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
+        editAssignmentButton.addActionListener(e -> {
+            int removeAt = Assignments.getSelectedRow();
+            if (removeAt >= 0) {
+                model.removeRow(removeAt);
             }
+            Assignments = new JTable(model);
+            Assignments.updateUI();
+            AssignmentTile.revalidate();
+            AssignmentTile.updateUI();
         });
-        editAssignmentButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                int removeAt = Assignments.getSelectedRow();
-                if (removeAt >= 0) {
-                    model.removeRow(removeAt);
-                }
-                Assignments = new JTable(model);
-                Assignments.updateUI();
-                AssignmentTile.revalidate();
-                AssignmentTile.updateUI();
-            }
-        });
-        logoutButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                firePropertyChange("previousPage", null, null);
-            }
-        });
+        logoutButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
 
         this.setVisible(true);
         this.add(AssignmentPanel);
         System.out.println("Assignment Selection page created");
-        showLetterGradeButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                firePropertyChange("LetterGradeSelected", null, null);
-            }
-        });
+        showLetterGradeButton.addActionListener(e -> firePropertyChange("LetterGradeSelected", null, null));
     }
 
     private String[] createAssignment() {

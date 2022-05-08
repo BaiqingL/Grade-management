@@ -12,14 +12,9 @@ import java.util.List;
 
 import static com.google.common.io.Files.getNameWithoutExtension;
 
-public class CSVReader {
+public record CSVReader(String fileName) {
     private static final int STUDENT_NAME_INDEX = 0;
     private static final int BUID_INDEX = 1;
-    private final String fileName;
-
-    public CSVReader(String fileName) {
-        this.fileName = fileName;
-    }
 
     public static GradedClass loadCSV(String filePath) throws IOException {
         CSVReader csvReader = new CSVReader(filePath);

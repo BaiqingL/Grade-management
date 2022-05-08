@@ -10,9 +10,20 @@ public class GradedClass {
     private final List<Student> students = new ArrayList<>();
     private final List<Assignment> assignments = new ArrayList<>();
 
-    public GradedClass(List<Student> students, List<Assignment> assignments) {
+    private String className;
+
+    public GradedClass(String className, List<Student> students, List<Assignment> assignments) {
+        this.className = className;
         this.students.addAll(students);
         this.assignments.addAll(assignments);
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String newClassName) {
+        this.className = newClassName;
     }
 
     public List<Student> getStudents() {

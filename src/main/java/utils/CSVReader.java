@@ -10,6 +10,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.google.common.io.Files.getNameWithoutExtension;
+
 public class CSVReader {
     private static final int STUDENT_NAME_INDEX = 0;
     private static final int BUID_INDEX = 1;
@@ -48,14 +50,7 @@ public class CSVReader {
             // Check if the student has any grades for the assignment
             for (int i = 2; i < record.size(); i += 2) {
                 Assignment assignment = assignments.get(assignmentIndex);
-                Assignment studentAssignment = new Assignment(
-                        assignment.getName(),
-                        assignment.getWeight(),
-                        assignment.getMaxGrade(),
-                        Integer.parseInt(record.get(i)),
-                        assignment.getAssignedDate(),
-                        assignment.getDueDate(),
-                        LocalDate.parse(record.get(i + 1)));
+                Assignment studentAssignment = new Assignment(assignment.getName(), assignment.getWeight(), assignment.getMaxGrade(), Integer.parseInt(record.get(i)), assignment.getAssignedDate(), assignment.getDueDate(), LocalDate.parse(record.get(i + 1)));
                 student.addAssignment(studentAssignment);
                 // Increment assignment index to check next assignment
                 assignmentIndex++;
@@ -66,7 +61,8 @@ public class CSVReader {
         }
 
         // Return entire graded class
-        return new GradedClass(students, assignments);
+        String className = getNameWithoutExtension(filePath);
+        return new GradedClass(className, students, assignments);
     }
 
     private List<CSVRecord> parse() throws IOException {

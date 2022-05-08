@@ -107,4 +107,13 @@ public class GradedClass {
     public void addAssignment(Assignment assignment) {
         assignments.add(assignment);
     }
+
+    public void removeStudentByBUID(int id) {
+        for (Student student : students) {
+            if (student.getBUID() == id) {
+                students.remove(student);
+                return;
+            }
+        }
+    }
 }

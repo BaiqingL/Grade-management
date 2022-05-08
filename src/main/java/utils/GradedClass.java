@@ -101,6 +101,19 @@ public class GradedClass {
         return Math.sqrt(sum / (double) students.size());
     }
 
+    public int getAmountOfStudentsSubmittedAssignment(int assignmentIndex) {
+        int count = 0;
+        for (Student student : students) {
+            String assignmentName = assignments.get(assignmentIndex).getName();
+            for (Assignment assignment : student.getAssignments()) {
+                if (assignment.getName().equals(assignmentName)) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
+
     public void addStudent(Student student) {
         students.add(student);
     }

@@ -6,6 +6,7 @@ import org.apache.commons.csv.CSVPrinter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class CSVWriter {
@@ -53,9 +54,9 @@ public class CSVWriter {
     public static void writeFinalGrades(String outputFilePath, String outputFileName, String[] headers, String[][] data) throws IOException {
         String fileOutName = outputFilePath + "/" + outputFileName + ".csv";
         CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(fileOutName), CSVFormat.DEFAULT);
-        csvPrinter.printRecord(headers);
+        csvPrinter.printRecord(Arrays.asList(headers));
         for (String[] row : data) {
-            csvPrinter.printRecord(row);
+            csvPrinter.printRecord(Arrays.asList(row));
         }
         csvPrinter.flush();
         csvPrinter.close();

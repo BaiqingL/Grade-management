@@ -129,7 +129,7 @@ public class LetterGrades extends JPanel {
     }
 
     private String[] getHeaders() {
-        return new String[]{"Name", "BUID", "Letter Grade"};
+        return new String[]{"Name", "BUID", "Final Grade", "Letter Grade"};
     }
 
     private String[][] getValues() {
@@ -137,7 +137,7 @@ public class LetterGrades extends JPanel {
         List<Student> students = course.getStudents();
         for (int i = 0; i < course.getStudents().size(); i++) {
             Student s = students.get(i);
-            values[i] = new String[]{s.getName(), String.valueOf(s.getBUID()), s.getLetterGrade()};
+            values[i] = new String[]{s.getName(), String.valueOf(s.getBUID()), s.getNumberGrade(), s.getLetterGrade()};
         }
         return values;
     }

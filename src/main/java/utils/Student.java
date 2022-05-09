@@ -40,6 +40,16 @@ public class Student {
         this.weights = weights;
     }
 
+    public String getNumberGrade() {
+        double cumulative = 0.0;
+
+        for (Assignment a : assignments) {
+            cumulative += (a.getPercentage() * a.getWeight());
+        }
+
+        int finalGrade = (int) cumulative;
+        return Integer.toString(finalGrade);
+    }
     public String getLetterGrade() {
         double cumulative = 0.0;
 

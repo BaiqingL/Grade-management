@@ -58,7 +58,7 @@ Group 5 - Baiqing Lyu, Jianqi Ma, Quang Nguyen
     * Shows the letter grades for a class
   * `MainFrame`
     * Chains together the other GUI components
-  * `SemesterSelection`'
+  * `SemesterSelection`
     * Semester selection GUI
   * `UserLogin`
     * User login screen

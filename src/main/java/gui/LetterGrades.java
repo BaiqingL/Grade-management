@@ -51,7 +51,7 @@ public class LetterGrades extends JPanel {
             try {
                 int[] gradeBrackets = getListOfLetterBrackets();
                 for (Student s : course.getStudents()) {
-                    s.setWeights(gradeBrackets);
+                    s.setBracket(gradeBrackets);
                 }
                 // Update the table
                 model.setDataVector(getValues(), getHeaders());
@@ -65,13 +65,14 @@ public class LetterGrades extends JPanel {
 
     private int[] getListOfLetterBrackets() throws Exception {
         int[] result = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        int[] currentBrackets = course.getStudents().get(0).getBrackets();
         // A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F
         // 13 elements
         String[] grades = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"};
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < currentBrackets.length; i++) {
             boolean enteredNumber = false;
             while (!enteredNumber) {
-                String s = JOptionPane.showInputDialog("Enter the letter bracket for " + grades[i]);
+                String s = JOptionPane.showInputDialog("Enter the letter bracket for " + grades[i] + "\n Current bracket: " + currentBrackets[i]);
                 if (s != null) {
                     try {
                         int gradeBracket = Integer.parseInt(s);

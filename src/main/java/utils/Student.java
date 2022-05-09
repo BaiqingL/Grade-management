@@ -9,7 +9,7 @@ public class Student {
 
     private final List<Assignment> assignments = new ArrayList<>();
 
-    private int[] weights = new int[]{95, 90, 87, 83, 80, 77, 73, 70, 67, 63, 60, 57, 0};
+    private int[] bracket = new int[]{95, 90, 87, 83, 80, 77, 73, 70, 67, 63, 60, 57, 0};
 
     public Student(String name, int BUID) {
         this.name = name;
@@ -32,12 +32,12 @@ public class Student {
         return assignments;
     }
 
-    public int[] getWeights() {
-        return weights;
+    public int[] getBrackets() {
+        return bracket;
     }
 
-    public void setWeights(int[] weights) {
-        this.weights = weights;
+    public void setBracket(int[] bracket) {
+        this.bracket = bracket;
     }
 
     public String getNumberGrade() {
@@ -60,29 +60,29 @@ public class Student {
 
         int finalGrade = (int) cumulative;
 
-        if (finalGrade >= weights[0]) {
+        if (finalGrade >= bracket[0]) {
             return "A+";
-        } else if (finalGrade >= weights[1]) {
+        } else if (finalGrade >= bracket[1]) {
             return "A";
-        } else if (finalGrade >= weights[2]) {
+        } else if (finalGrade >= bracket[2]) {
             return "A-";
-        } else if (finalGrade >= weights[3]) {
+        } else if (finalGrade >= bracket[3]) {
             return "B+";
-        } else if (finalGrade >= weights[4]) {
+        } else if (finalGrade >= bracket[4]) {
             return "B";
-        } else if (finalGrade >= weights[5]) {
+        } else if (finalGrade >= bracket[5]) {
             return "B-";
-        } else if (finalGrade >= weights[6]) {
+        } else if (finalGrade >= bracket[6]) {
             return "C+";
-        } else if (finalGrade >= weights[7]) {
+        } else if (finalGrade >= bracket[7]) {
             return "C";
-        } else if (finalGrade >= weights[8]) {
+        } else if (finalGrade >= bracket[8]) {
             return "C-";
-        } else if (finalGrade >= weights[9]) {
+        } else if (finalGrade >= bracket[9]) {
             return "D+";
-        } else if (finalGrade >= weights[10]) {
+        } else if (finalGrade >= bracket[10]) {
             return "D";
-        } else if (finalGrade >= weights[11]) {
+        } else if (finalGrade >= bracket[11]) {
             return "D-";
         } else {
             return "F";

@@ -43,15 +43,23 @@ Group 5 - Baiqing Lyu, Jianqi Ma, Quang Nguyen
     * Student object that holds their respective grades and assignments in addition to their names and ID.
 * gui
   * `State`
+    * State to be shared among the GUI components
   * `Assignment`
+    * Assignment detail and student grade table
   * `AssignmentSelection`
+    * Select certain assignments to be displayed
   * `CourseSelection`
+    * Course selection GUI
   * `CourseTitle`
+    * Shows the courses
   * `LetterGrades`
+    * Shows the letter grades for a class
   * `MainFrame`
-  * `MainFrame`
-  * `SemesterSelection`
+    * Chains together the other GUI components
+  * `SemesterSelection`'
+    * Semester selection GUI
   * `UserLogin`
+    * User login screen
 #### Work distribution
 
 * Baiqing Lyu

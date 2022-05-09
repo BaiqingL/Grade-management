@@ -73,4 +73,14 @@ Group 5 - Baiqing Lyu, Jianqi Ma, Quang Nguyen
   * Dynamic updates to the frontend after user modification
   * Maven project setup and jar packaging
 * Jianqi Ma
+  * Frontend Assignment design
+  * Frontend AssignmentSelection design
+  * Frontend CourseSelection design
+  * Frontend CourseTile design
+  * Frontend LetterGrades design
+  * Frontend UserLogin design
+  * Frontend Mainframe chaining
+  * Linking backend GradedClass objects with Frontend JTable and Statistics
+  * Linking frontend buttons with backend functions
+  * Dynamic updates to the frontend after user modification
 * Quang Nguyen

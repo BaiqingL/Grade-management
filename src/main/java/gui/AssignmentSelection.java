@@ -16,6 +16,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 import static org.codehaus.plexus.util.StringUtils.isNumeric;
@@ -61,21 +62,25 @@ public class AssignmentSelection extends JPanel {
 
         // Configure the edit assignment button action
         deleteAssignmentButton.addActionListener(e -> {
-            int removeAt = Assignments.getSelectedRow();
-            if (removeAt == -1) {
-                JOptionPane.showMessageDialog(AssignmentPanel, "No assignments selected");
+            if (Assignments.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No assignments to delete");
             } else {
-                // Confirm the removal
-                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this assignment?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    // Remove the assignment, and update the table
-                    course.removeAssignment(removeAt);
+                String selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getAssignmentsAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                // Make sure the input is a number
+                try {
+                    while (selected != null && !isNumeric(selected) || Integer.parseInt(Objects.requireNonNull(selected)) > Assignments.getRowCount() || Integer.parseInt(Objects.requireNonNull(selected)) == 0) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+                        selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getAssignmentsAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                    }
+                    course.removeAssignment(Integer.parseInt(selected) - 1);
                     // Update the table
-                    model.removeRow(removeAt);
+                    model.removeRow(Integer.parseInt(selected) - 1);
                     Assignments = new JTable(model);
                     Assignments.updateUI();
                     AssignmentTile.revalidate();
                     AssignmentTile.updateUI();
+                } catch (Exception ignored) {
+
                 }
             }
         });
@@ -119,6 +124,14 @@ public class AssignmentSelection extends JPanel {
                 }
             }
         });
+    }
+
+    private String getAssignmentsAndIndex() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < course.getAssignments().size(); i++) {
+            sb.append(i + 1).append(". ").append(course.getAssignments().get(i).getName()).append("\n");
+        }
+        return sb.toString();
     }
 
     // Dummy method to create an assignment

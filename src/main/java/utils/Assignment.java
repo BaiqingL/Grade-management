@@ -100,7 +100,7 @@ public class Assignment {
     }
 
     public void applySquareCurve() {
-        int boost = (int) Math.pow(maxGrade - grade, 2);
+        int boost = (int) Math.sqrt(maxGrade - grade);
         grade = Math.min(grade + boost, maxGrade);
     }
 

@@ -9,6 +9,8 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Locale;
 
@@ -36,12 +38,14 @@ public class Assignment extends JPanel {
     private JLabel meanVal;
     private JLabel stdVal;
     private JLabel assignmentName;
-    private JButton curveButton;
+    private JButton linearCurveButton;
+    private JButton squareCurveButton;
+    private JButton percentageCurveButton;
 
     private DefaultTableModel model;
 
-    private GradedClass course;
-    private int assignmentIdx;
+    private final GradedClass course;
+    private final int assignmentIdx;
 
     public Assignment(GradedClass course, int assignmentIdx) {
         this.course = course;
@@ -54,8 +58,26 @@ public class Assignment extends JPanel {
         this.add(assignmentContainer);
 
         back.addActionListener(e -> firePropertyChange("previousPage", null, null));
+        squareCurveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                firePropertyChange("curveSquare", null, "square");
+                course.applySquareCurve(assignmentIdx);
+                updateStats();
+                updateTable();
+            }
+        });
+    }
 
-        curveButton.addActionListener(e -> firePropertyChange("curve", null, null));
+    private void updateTable() {
+        // Refresh the table
+        model.setRowCount(0);
+        for (Student s : course.getStudents()) {
+            model.addRow(new Object[]{s.getName(),
+                    s.getBUID(),
+                    s.getAssignments().get(assignmentIdx).getGrade(),
+                    s.getAssignments().get(assignmentIdx).getSubmissionDate()});
+        }
     }
 
     private void setStats(JLabel label, String val) {
@@ -68,6 +90,10 @@ public class Assignment extends JPanel {
         setStats(medianVal, String.valueOf(course.getMedianGradeForAssignment(assignmentIdx)));
         setStats(meanVal, String.valueOf(course.getMeanGradeForAssignment(assignmentIdx)));
         setStats(stdVal, String.valueOf(course.getStandardDevForAssignment(assignmentIdx)));
+    }
+
+    private void promptInteger(String message) {
+        int change = Integer.parseInt(JOptionPane.showInputDialog(message));
     }
 
     private String[] getHeader() {
@@ -183,9 +209,18 @@ public class Assignment extends JPanel {
         if (assignmentNameFont != null) assignmentName.setFont(assignmentNameFont);
         assignmentName.setText("Label");
         assignmentContainer.add(assignmentName, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        curveButton = new JButton();
-        curveButton.setText("Curve");
-        assignmentContainer.add(curveButton, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel1 = new JPanel();
+        panel1.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        assignmentContainer.add(panel1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        linearCurveButton = new JButton();
+        linearCurveButton.setText("Linear Curve");
+        panel1.add(linearCurveButton, new com.intellij.uiDesigner.core.GridConstraints(0, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        squareCurveButton = new JButton();
+        squareCurveButton.setText("Square Curve");
+        panel1.add(squareCurveButton, new com.intellij.uiDesigner.core.GridConstraints(0, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        percentageCurveButton = new JButton();
+        percentageCurveButton.setText("Percentage Curve");
+        panel1.add(percentageCurveButton, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

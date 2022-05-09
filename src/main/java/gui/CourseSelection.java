@@ -2,6 +2,7 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import utils.ClassPathTuple;
 import utils.CSVReader;
 import utils.GradedClass;
 
@@ -34,7 +35,7 @@ public class CourseSelection extends JPanel {
 
     private int count = 0;
 
-    private static String FILE_PATH;
+    private static final List<ClassPathTuple> CLASS_PATH_TUPLE = new ArrayList<>();
 
     public CourseSelection() {
 
@@ -49,8 +50,7 @@ public class CourseSelection extends JPanel {
             String filePath = "";
             int result = fileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
-                FILE_PATH = fileChooser.getSelectedFile().getAbsolutePath();
-                filePath = FILE_PATH;
+                filePath = fileChooser.getSelectedFile().getAbsolutePath();
             }
             addCourse(filePath);
             count++;
@@ -102,14 +102,20 @@ public class CourseSelection extends JPanel {
         return sb.toString();
     }
 
-    public static String getFilePath() {
-        return FILE_PATH;
+    public static String getCourseFilePath(String assignmentName) {
+        for (ClassPathTuple tuple : CLASS_PATH_TUPLE) {
+            if (tuple.getClassName().equals(assignmentName)) {
+                return tuple.getPath();
+            }
+        }
+        return null;
     }
 
     private void addCourse(String filePath) {
         try {
             GradedClass course = CSVReader.loadCSV(filePath);
             courses.add(course);
+            CLASS_PATH_TUPLE.add(new ClassPathTuple(course.getClassName(), filePath));
         } catch (Exception e) {
             System.out.println("Cannot read from" + filePath);
         }

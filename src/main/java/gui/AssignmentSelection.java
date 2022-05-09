@@ -88,7 +88,8 @@ public class AssignmentSelection extends JPanel {
         saveChanges.addActionListener(e -> {
             firePropertyChange("SaveChanges", null, null);
             try {
-                String filePath = CourseSelection.getFilePath();
+                String filePath = CourseSelection.getCourseFilePath(course.getClassName());
+                System.out.println(filePath);
                 CSVWriter.writeGradedClass(course, filePath);
                 showMessageDialog(null, "Class saved successfully");
             } catch (IOException ex) {

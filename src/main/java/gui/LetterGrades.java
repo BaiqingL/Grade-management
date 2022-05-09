@@ -74,8 +74,7 @@ public class LetterGrades extends JPanel {
     }
 
     private String[] getHeaders() {
-        String[] headers = {"Name", "BUID", "Letter Grade"};
-        return headers;
+        return new String[]{"Name", "BUID", "Letter Grade"};
     }
 
     private String[][] getValues() {

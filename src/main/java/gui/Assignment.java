@@ -64,8 +64,7 @@ public class Assignment extends JPanel {
     }
 
     private String[] getHeader() {
-        String[] header = {"Name", "BUID", "Score", "Submission Date"};
-        return header;
+        return new String[]{"Name", "BUID", "Score", "Submission Date"};
     }
 
     private String[][] getValue() {

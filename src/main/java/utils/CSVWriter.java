@@ -18,12 +18,7 @@ public class CSVWriter {
         header.add("BUID");
         List<Assignment> assignments = gc.getAssignments();
         for (Assignment a : assignments) {
-            String assignmentFormat = String.format("%s (%d, %d%%) (%s,%s)",
-                    a.getName(),
-                    a.getMaxGrade(),
-                    a.getWeight(),
-                    a.getAssignedDate(),
-                    a.getDueDate());
+            String assignmentFormat = String.format("%s (%d, %d%%) (%s,%s)", a.getName(), a.getMaxGrade(), a.getWeight(), a.getAssignedDate(), a.getDueDate());
             header.add(assignmentFormat);
             header.add("Submission Date");
         }

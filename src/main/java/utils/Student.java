@@ -7,7 +7,7 @@ public class Student {
     private final String name;
     private final int BUID;
 
-    private List<Assignment> assignments = new ArrayList<>();
+    private final List<Assignment> assignments = new ArrayList<>();
 
     public Student(String name, int BUID) {
         this.name = name;

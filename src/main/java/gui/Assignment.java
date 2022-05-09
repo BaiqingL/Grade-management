@@ -9,12 +9,15 @@ import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class Assignment extends JPanel {
+    private final GradedClass course;
+    private final int assignmentIdx;
     private JPanel assignmentContainer;
     private JScrollPane gradeContainer;
     private JPanel statistic;
@@ -42,11 +45,8 @@ public class Assignment extends JPanel {
     private JButton squareCurveButton;
     private JButton percentageCurveButton;
     private JButton deleteStudentButton;
-
+    private JButton saveButton;
     private DefaultTableModel model;
-
-    private final GradedClass course;
-    private final int assignmentIdx;
 
     public Assignment(GradedClass course, int assignmentIdx) {
         this.course = course;
@@ -58,7 +58,21 @@ public class Assignment extends JPanel {
 
         this.add(assignmentContainer);
 
-        back.addActionListener(e -> firePropertyChange("previousPage", null, null));
+        back.addActionListener(e -> {
+            firePropertyChange("previousPage", null, null);
+        });
+        saveButton.addActionListener(e -> {
+            ArrayList<Integer> data = new ArrayList<>();
+            for (int count = 0; count < model.getRowCount(); count++) {
+                data.add(Integer.valueOf(grades.getValueAt(count, 2).toString()));
+            }
+            for (int i = 0; i < course.getStudents().size(); i++) {
+                course.getStudents().get(i).getAssignments().get(assignmentIdx).setGrade(data.get(i));
+            }
+            updateStats();
+            updateTable();
+            showMessageDialog(null, "Saved!");
+        });
         squareCurveButton.addActionListener(actionEvent -> {
             firePropertyChange("curveSquare", null, "square");
             course.applySquareCurve(assignmentIdx);
@@ -82,8 +96,7 @@ public class Assignment extends JPanel {
             int selected = grades.getSelectedRow();
             int BUID = course.getStudents().get(selected).getBUID();
             String name = course.getStudents().get(selected).getName();
-            int confirmation = JOptionPane.showConfirmDialog(null,
-                    "Are you sure you want to delete " + name + " from this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete " + name + " from this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
                 course.removeStudentByBUID(BUID);
             }
@@ -95,10 +108,7 @@ public class Assignment extends JPanel {
         // Refresh the table
         model.setRowCount(0);
         for (Student s : course.getStudents()) {
-            model.addRow(new Object[]{s.getName(),
-                    s.getBUID(),
-                    s.getAssignments().get(assignmentIdx).getGrade(),
-                    s.getAssignments().get(assignmentIdx).getSubmissionDate()});
+            model.addRow(new Object[]{s.getName(), s.getBUID(), s.getAssignments().get(assignmentIdx).getGrade(), s.getAssignments().get(assignmentIdx).getSubmissionDate()});
         }
     }
 
@@ -209,21 +219,22 @@ public class Assignment extends JPanel {
         meanVal.setText("Label");
         statMean.add(meanVal, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_NORTH, com.intellij.uiDesigner.core.GridConstraints.FILL_NONE, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         gradeActions = new JPanel();
-        gradeActions.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 4, new Insets(0, 0, 0, 0), -1, -1));
+        gradeActions.setLayout(new com.intellij.uiDesigner.core.GridLayoutManager(3, 5, new Insets(0, 0, 0, 0), -1, -1));
         assignmentContainer.add(gradeActions, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         logout = new JButton();
         logout.setText("Log out");
-        gradeActions.add(logout, new com.intellij.uiDesigner.core.GridConstraints(1, 3, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        gradeActions.add(logout, new com.intellij.uiDesigner.core.GridConstraints(0, 4, 3, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
         back = new JButton();
         back.setText("Back");
-        gradeActions.add(back, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        gradeActions.add(back, new com.intellij.uiDesigner.core.GridConstraints(0, 3, 3, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
+        saveButton = new JButton();
+        saveButton.setText("Save");
+        gradeActions.add(saveButton, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
+        gradeActions.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(1, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         deleteStudentButton = new JButton();
         deleteStudentButton.setText("Delete Student");
-        gradeActions.add(deleteStudentButton, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
-        gradeActions.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();
-        gradeActions.add(spacer2, new com.intellij.uiDesigner.core.GridConstraints(0, 2, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_VERTICAL, 1, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        gradeActions.add(deleteStudentButton, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         assignmentContainer.add(gradeContainer, new com.intellij.uiDesigner.core.GridConstraints(4, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_BOTH, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         gradeContainer.setViewportView(grades);
         assignmentName = new JLabel();

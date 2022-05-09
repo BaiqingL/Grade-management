@@ -52,6 +52,7 @@ public class AssignmentSelection extends JPanel {
             // prevent the following function being called twice
             if (!e.getValueIsAdjusting() && Assignments.getSelectedRow() != -1) {
                 firePropertyChange("AssignmentSelected", null, Assignments.getSelectedRow());
+                Assignments.clearSelection();
             }
         });
 

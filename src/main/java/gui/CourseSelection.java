@@ -71,6 +71,7 @@ public class CourseSelection extends JPanel {
             // prevent the following function being called twice
             if (!e.getValueIsAdjusting() && courseTable.getSelectedRow() != -1) {
                 firePropertyChange("CourseSelected", null, courses.get(courseTable.getSelectedRow()));
+                courseTable.clearSelection();
             }
         });
 

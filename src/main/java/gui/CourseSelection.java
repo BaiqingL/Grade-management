@@ -2,13 +2,11 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import org.bouncycastle.jcajce.provider.drbg.DRBG;
-import utils.ClassPathTuple;
 import utils.CSVReader;
+import utils.ClassPathTuple;
 import utils.GradedClass;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
@@ -21,6 +19,7 @@ import java.util.Objects;
 import static org.codehaus.plexus.util.StringUtils.isNumeric;
 
 public class CourseSelection extends JPanel {
+    private static final List<ClassPathTuple> CLASS_PATH_TUPLE = new ArrayList<>();
     private JPanel coursePanel;
     private JButton addCourseButton;
     private JButton deleteCourseButton;
@@ -29,17 +28,11 @@ public class CourseSelection extends JPanel {
     private JPanel spacer;
     private JLabel semester;
     private JScrollPane courseContainer;
-
     private JTable courseTable;
-
     private DefaultTableModel model;
     private boolean isLoggedIn;
-
-    private List<GradedClass> courses;
-
-    private int count = 0;
-
-    private static final List<ClassPathTuple> CLASS_PATH_TUPLE = new ArrayList<>();
+    private final List<GradedClass> courses;
+    private final int count = 0;
 
     public CourseSelection() {
 
@@ -59,11 +52,23 @@ public class CourseSelection extends JPanel {
             firePropertyChange("GUIupdate", 0, 0);
         });
         deleteCourseButton.addActionListener(e -> {
+            if (courseTable.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No courses to delete");
+            } else {
+                String selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                // Make sure the input is a number
+                try {
+                    while (selected != null && !isNumeric(selected) || Integer.parseInt(Objects.requireNonNull(selected)) > courseTable.getRowCount() || Integer.parseInt(Objects.requireNonNull(selected)) == 0) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+                        selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                    }
+                    deleteCourse(Integer.parseInt(selected) - 1);
+                } catch (Exception ignored) {
 
-            deleteCourse(courseTable.getSelectedRow());
-            firePropertyChange("GUIupdate", 0, 0);
-
+                }
+            }
         });
+
 
         logoutButton.addActionListener(e -> loggout());
 
@@ -77,14 +82,6 @@ public class CourseSelection extends JPanel {
 
     }
 
-    private String getCoursesAndIndex() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < courses.size(); i++) {
-            sb.append(i + 1).append(": ").append(courses.get(i).getClassName()).append("\n");
-        }
-        return sb.toString();
-    }
-
     public static String getCourseFilePath(String assignmentName) {
         for (ClassPathTuple tuple : CLASS_PATH_TUPLE) {
             if (tuple.getClassName().equals(assignmentName)) {
@@ -92,6 +89,14 @@ public class CourseSelection extends JPanel {
             }
         }
         return null;
+    }
+
+    private String getCoursesAndIndex() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < courses.size(); i++) {
+            sb.append(i + 1).append(": ").append(courses.get(i).getClassName()).append("\n");
+        }
+        return sb.toString();
     }
 
     private void addCourse(String filePath) {

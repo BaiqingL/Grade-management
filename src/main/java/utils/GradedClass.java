@@ -26,6 +26,13 @@ public class GradedClass {
         this.className = newClassName;
     }
 
+    public void removeAssignment(int assignmentIndex) {
+        this.assignments.remove(assignmentIndex);
+        for (Student student : students) {
+            student.getAssignments().remove(assignmentIndex);
+        }
+    }
+
     public List<Student> getStudents() {
         return students;
     }

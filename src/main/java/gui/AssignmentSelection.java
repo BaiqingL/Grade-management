@@ -42,7 +42,10 @@ public class AssignmentSelection extends JPanel {
         this.isLoggedIn = true;
         this.course = course;
 
+        // IntelliJ generated code
         $$$setupUI$$$();
+
+        // Set the text to be used for the course title
         courseName.setText("Current course: " + course.toString());
 
         Assignments.getSelectionModel().addListSelectionListener(e -> {
@@ -51,12 +54,19 @@ public class AssignmentSelection extends JPanel {
                 firePropertyChange("AssignmentSelected", null, Assignments.getSelectedRow());
             }
         });
+
+        // Configure add assignment button action
         addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
+
+        // Configure the edit assignment button action
         editAssignmentButton.addActionListener(e -> {
             int removeAt = Assignments.getSelectedRow();
             // Confirm the removal
             int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
             if (confirmation == JOptionPane.YES_OPTION) {
+                // Remove the assignment, and update the table
+                course.removeAssignment(removeAt);
+                // Update the table
                 model.removeRow(removeAt);
                 Assignments = new JTable(model);
                 Assignments.updateUI();
@@ -65,12 +75,16 @@ public class AssignmentSelection extends JPanel {
             }
         });
 
+        // Log out and return to previous page
         logoutButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
 
         this.setVisible(true);
         this.add(AssignmentPanel);
-        System.out.println("Assignment Selection page created");
+
+        // Go to the letter grade page
         showLetterGradeButton.addActionListener(e -> firePropertyChange("LetterGradeSelected", null, null));
+
+        // Save changes, and write to original CSV
         saveChanges.addActionListener(e -> {
             firePropertyChange("SaveChanges", null, null);
             try {
@@ -82,6 +96,8 @@ public class AssignmentSelection extends JPanel {
                 throw new RuntimeException(ex);
             }
         });
+
+        // Change weights and prompt user to enter new ones
         changeWeightsButton.addActionListener(e -> {
             firePropertyChange("ChangeWeights", null, null);
             for (Assignment assignment : course.getAssignments()) {
@@ -99,11 +115,12 @@ public class AssignmentSelection extends JPanel {
         });
     }
 
+    // Dummy method to create an assignment
     private String[] createAssignment() {
-        String[] value = {"Assignment 3", "March 19, 2022", "April 19, 2022", "198"};
-        return value;
+        return new String[]{"Assignment 3", "March 19, 2022", "April 19, 2022", "198"};
     }
 
+    // Checks value to be shown in tables
     private String[][] getValue() {
         String[][] values = new String[course.getAssignments().size()][4];
         List<Assignment> assignments = course.getAssignments();
@@ -116,8 +133,7 @@ public class AssignmentSelection extends JPanel {
     }
 
     private String[] getHeader() {
-        String[] header = {"Name", "Released Date", "Due Date", "Submissions"};
-        return header;
+        return new String[]{"Name", "Released Date", "Due Date", "Submissions"};
     }
 
     private void createUIComponents() {

@@ -2,7 +2,6 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import com.intellij.uiDesigner.core.Spacer;
 import utils.CSVReader;
 import utils.GradedClass;
 
@@ -11,22 +10,17 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.text.StyleContext;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.lang.reflect.Array;
-import java.rmi.server.ExportException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
+import static org.codehaus.plexus.util.StringUtils.isNumeric;
 
 public class CourseSelection extends JPanel {
     private JPanel coursePanel;
     private JButton addCourseButton;
-    private JButton editCourseButton;
+    private JButton deleteCourseButton;
     private JButton logoutButton;
     private JPanel courseActions;
     private JPanel courseTiles;
@@ -66,18 +60,29 @@ public class CourseSelection extends JPanel {
 
             for (CourseTile ct : tiles) {
                 courseTiles.add(ct.getTilePanel());
-//                    courseTiles.add(new JLabel("This is a Course"));
             }
 
             courseTiles.revalidate();
             courseTiles.updateUI();
             firePropertyChange("GUIupdate", 0, 0);
         });
-        editCourseButton.addActionListener(e -> {
+        deleteCourseButton.addActionListener(e -> {
             System.out.println(tiles.size() + " courses left");
 
             if (tiles.size() > 0) {
-                deleteCourse(0);
+                String selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                // Make sure the input is a number
+                try {
+                    while (selected != null && !isNumeric(selected) || Integer.parseInt(Objects.requireNonNull(selected)) > tiles.size()) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+                        selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                    }
+                    deleteCourse(Integer.parseInt(selected) - 1);
+                } catch (Exception ignored) {
+
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "No courses to delete", "Error", JOptionPane.ERROR_MESSAGE);
             }
 
             courseTiles.revalidate();
@@ -87,6 +92,14 @@ public class CourseSelection extends JPanel {
         });
         logoutButton.addActionListener(e -> loggout());
 
+    }
+
+    private String getCoursesAndIndex() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < courses.size(); i++) {
+            sb.append(i + 1).append(": ").append(courses.get(i).getClassName()).append("\n");
+        }
+        return sb.toString();
     }
 
     public static String getFilePath() {
@@ -161,9 +174,9 @@ public class CourseSelection extends JPanel {
         addCourseButton = new JButton();
         addCourseButton.setText("Add Course");
         courseActions.add(addCourseButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        editCourseButton = new JButton();
-        editCourseButton.setText("Delete Course");
-        courseActions.add(editCourseButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deleteCourseButton = new JButton();
+        deleteCourseButton.setText("Delete Course");
+        courseActions.add(deleteCourseButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Logout");
         courseActions.add(logoutButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

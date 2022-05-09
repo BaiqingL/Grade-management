@@ -41,6 +41,7 @@ public class Assignment extends JPanel {
     private JButton linearCurveButton;
     private JButton squareCurveButton;
     private JButton percentageCurveButton;
+    private JButton deleteStudentButton;
 
     private DefaultTableModel model;
 
@@ -74,6 +75,13 @@ public class Assignment extends JPanel {
             firePropertyChange("curvePercentage", null, "percentage");
             course.applyPercentageCurve(assignmentIdx, promptInteger("Enter the amount to curve by percentage"));
             updateStats();
+            updateTable();
+        });
+        deleteStudentButton.addActionListener(actionEvent -> {
+            firePropertyChange("deleteStudent", null, null);
+            int selected = grades.getSelectedRow();
+            int BUID = course.getStudents().get(selected).getBUID();
+            course.removeStudentByBUID(BUID);
             updateTable();
         });
     }
@@ -204,9 +212,9 @@ public class Assignment extends JPanel {
         back = new JButton();
         back.setText("Back");
         gradeActions.add(back, new com.intellij.uiDesigner.core.GridConstraints(1, 2, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
-        final JButton button1 = new JButton();
-        button1.setText("Delete Student");
-        gradeActions.add(button1, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deleteStudentButton = new JButton();
+        deleteStudentButton.setText("Delete Student");
+        gradeActions.add(deleteStudentButton, new com.intellij.uiDesigner.core.GridConstraints(1, 1, 2, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_SHRINK | com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_CAN_GROW, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer1 = new com.intellij.uiDesigner.core.Spacer();
         gradeActions.add(spacer1, new com.intellij.uiDesigner.core.GridConstraints(2, 0, 1, 1, com.intellij.uiDesigner.core.GridConstraints.ANCHOR_CENTER, com.intellij.uiDesigner.core.GridConstraints.FILL_HORIZONTAL, com.intellij.uiDesigner.core.GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final com.intellij.uiDesigner.core.Spacer spacer2 = new com.intellij.uiDesigner.core.Spacer();

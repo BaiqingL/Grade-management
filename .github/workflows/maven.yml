@@ -25,8 +25,9 @@ jobs:
     - name: Build with Maven
       run: mvn clean compile assembly:single --file pom.xml
 
-    - name: Upload jar file
     - uses: actions/upload-artifact@v3
+    - name: Upload jar file
+      uses: actions/upload-artifact@v3
       with:
         name: Team5Grader.jar
         path: target/grade-manager-1.0-SNAPSHOT-jar-with-dependencies.jar

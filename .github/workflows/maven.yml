@@ -20,7 +20,7 @@ jobs:
       uses: actions/setup-java@v3
       with:
         java-version: '18'
-        distribution: 'openjdk'
+        distribution: 'temurin'
         cache: maven
     - name: Build with Maven
       run: mvn clean compile assembly:single --file pom.xml

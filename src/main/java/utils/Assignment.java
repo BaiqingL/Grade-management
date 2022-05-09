@@ -109,7 +109,7 @@ public class Assignment {
     }
 
     public void applyPercentageCurve(double percentage) {
-        int boost = (int) (maxGrade * percentage);
+        int boost = (int) (grade * (percentage / 100.0));
         grade = Math.min(grade + boost, maxGrade);
     }
 

@@ -58,14 +58,23 @@ public class Assignment extends JPanel {
         this.add(assignmentContainer);
 
         back.addActionListener(e -> firePropertyChange("previousPage", null, null));
-        squareCurveButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent actionEvent) {
-                firePropertyChange("curveSquare", null, "square");
-                course.applySquareCurve(assignmentIdx);
-                updateStats();
-                updateTable();
-            }
+        squareCurveButton.addActionListener(actionEvent -> {
+            firePropertyChange("curveSquare", null, "square");
+            course.applySquareCurve(assignmentIdx);
+            updateStats();
+            updateTable();
+        });
+        linearCurveButton.addActionListener(actionEvent -> {
+            firePropertyChange("curveLinear", null, "linear");
+            course.applyLinearCurve(assignmentIdx, promptInteger("Enter the amount to curve linearly"));
+            updateStats();
+            updateTable();
+        });
+        percentageCurveButton.addActionListener(actionEvent -> {
+            firePropertyChange("curvePercentage", null, "percentage");
+            course.applyPercentageCurve(assignmentIdx, promptInteger("Enter the amount to curve by percentage"));
+            updateStats();
+            updateTable();
         });
     }
 
@@ -92,8 +101,8 @@ public class Assignment extends JPanel {
         setStats(stdVal, String.valueOf(course.getStandardDevForAssignment(assignmentIdx)));
     }
 
-    private void promptInteger(String message) {
-        int change = Integer.parseInt(JOptionPane.showInputDialog(message));
+    private int promptInteger(String message) {
+        return Integer.parseInt(JOptionPane.showInputDialog(message));
     }
 
     private String[] getHeader() {

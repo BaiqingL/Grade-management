@@ -28,7 +28,7 @@ public class AssignmentSelection extends JPanel {
     private JPanel AssignmentAction;
     private JButton addAssignmentButton;
     private JButton logoutButton;
-    private JButton editAssignmentButton;
+    private JButton deleteAssignmentButton;
     private JTable Assignments;
     private JButton showLetterGradeButton;
     private JLabel courseName;
@@ -59,19 +59,23 @@ public class AssignmentSelection extends JPanel {
         addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
 
         // Configure the edit assignment button action
-        editAssignmentButton.addActionListener(e -> {
+        deleteAssignmentButton.addActionListener(e -> {
             int removeAt = Assignments.getSelectedRow();
-            // Confirm the removal
-            int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
-            if (confirmation == JOptionPane.YES_OPTION) {
-                // Remove the assignment, and update the table
-                course.removeAssignment(removeAt);
-                // Update the table
-                model.removeRow(removeAt);
-                Assignments = new JTable(model);
-                Assignments.updateUI();
-                AssignmentTile.revalidate();
-                AssignmentTile.updateUI();
+            if (removeAt == -1) {
+                JOptionPane.showMessageDialog(AssignmentPanel, "No assignments selected");
+            } else {
+                // Confirm the removal
+                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this assignment?", "Confirmation", JOptionPane.YES_NO_OPTION);
+                if (confirmation == JOptionPane.YES_OPTION) {
+                    // Remove the assignment, and update the table
+                    course.removeAssignment(removeAt);
+                    // Update the table
+                    model.removeRow(removeAt);
+                    Assignments = new JTable(model);
+                    Assignments.updateUI();
+                    AssignmentTile.revalidate();
+                    AssignmentTile.updateUI();
+                }
             }
         });
 
@@ -161,9 +165,9 @@ public class AssignmentSelection extends JPanel {
         addAssignmentButton = new JButton();
         addAssignmentButton.setText("Add Assignment");
         AssignmentAction.add(addAssignmentButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        editAssignmentButton = new JButton();
-        editAssignmentButton.setText("Delete Assignment");
-        AssignmentAction.add(editAssignmentButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        deleteAssignmentButton = new JButton();
+        deleteAssignmentButton.setText("Delete Assignment");
+        AssignmentAction.add(deleteAssignmentButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Back");
         AssignmentAction.add(logoutButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));

@@ -9,6 +9,8 @@ public class Student {
 
     private final List<Assignment> assignments = new ArrayList<>();
 
+    private int[] weights = new int[]{95, 90, 87, 83, 80, 77, 73, 70, 67, 63, 60, 57, 0};
+
     public Student(String name, int BUID) {
         this.name = name;
         this.BUID = BUID;
@@ -30,38 +32,47 @@ public class Student {
         return assignments;
     }
 
+    public int[] getWeights() {
+        return weights;
+    }
+
+    public void setWeights(int[] weights) {
+        this.weights = weights;
+    }
+
     public String getLetterGrade() {
         double cumulative = 0.0;
 
-        for (int i = 0; i < assignments.size(); i++) {
-            Assignment a = assignments.get(i);
+        for (Assignment a : assignments) {
             cumulative += (a.getPercentage() * a.getWeight());
         }
 
         int finalGrade = (int) cumulative;
 
-        if (finalGrade >= 97) {
+        if (finalGrade >= weights[0]) {
             return "A+";
-        } else if (finalGrade >= 93 && finalGrade <= 96) {
+        } else if (finalGrade >= weights[1]) {
             return "A";
-        } else if (finalGrade >= 90 && finalGrade <= 92) {
+        } else if (finalGrade >= weights[2]) {
             return "A-";
-        } else if (finalGrade >= 87 && finalGrade <= 89) {
+        } else if (finalGrade >= weights[3]) {
             return "B+";
-        } else if (finalGrade >= 83 && finalGrade <= 86) {
+        } else if (finalGrade >= weights[4]) {
             return "B";
-        } else if (finalGrade >= 80 && finalGrade <= 82) {
+        } else if (finalGrade >= weights[5]) {
             return "B-";
-        } else if (finalGrade >= 77 && finalGrade <= 79) {
+        } else if (finalGrade >= weights[6]) {
             return "C+";
-        } else if (finalGrade >= 73 && finalGrade <= 76) {
+        } else if (finalGrade >= weights[7]) {
             return "C";
-        } else if (finalGrade >= 70 && finalGrade <= 72) {
+        } else if (finalGrade >= weights[8]) {
             return "C-";
-        } else if (finalGrade >= 67 && finalGrade <= 69) {
+        } else if (finalGrade >= weights[9]) {
             return "D+";
-        } else if (finalGrade >= 65 && finalGrade <= 66) {
+        } else if (finalGrade >= weights[10]) {
             return "D";
+        } else if (finalGrade >= weights[11]) {
+            return "D-";
         } else {
             return "F";
         }

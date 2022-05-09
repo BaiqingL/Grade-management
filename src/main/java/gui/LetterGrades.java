@@ -16,6 +16,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -27,6 +28,7 @@ public class LetterGrades extends JPanel {
     private JPanel letterGradeActions;
     private JPanel panelContainer;
     private JLabel courseName;
+    private JButton changeLetterBracketButton;
 
     private DefaultTableModel model;
 
@@ -45,6 +47,50 @@ public class LetterGrades extends JPanel {
                 throw new RuntimeException(ex);
             }
         });
+        changeLetterBracketButton.addActionListener(e -> {
+            firePropertyChange("changeLetterBracket", null, null);
+            try {
+                int[] gradeBrackets = getListOfLetterBrackets();
+                for (Student s : course.getStudents()) {
+                    s.setWeights(gradeBrackets);
+                }
+                // Update the table
+                model.setDataVector(getValues(), getHeaders());
+                // Show message of change success
+                JOptionPane.showMessageDialog(null, "Letter grade brackets changed successfully");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        });
+    }
+
+    private int[] getListOfLetterBrackets() throws Exception {
+        int[] result = new int[]{0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+        // A+, A, A-, B+, B, B-, C+, C, C-, D+, D, D-, F
+        // 13 elements
+        String[] grades = new String[]{"A+", "A", "A-", "B+", "B", "B-", "C+", "C", "C-", "D+", "D", "D-", "F"};
+        for (int i = 0; i < 13; i++) {
+            boolean enteredNumber = false;
+            while (!enteredNumber) {
+                String s = JOptionPane.showInputDialog("Enter the letter bracket for " + grades[i]);
+                if (s != null) {
+                    try {
+                        int gradeBracket = Integer.parseInt(s);
+                        if (i != 0 && gradeBracket >= result[i - 1]) {
+                            JOptionPane.showMessageDialog(null, "Grade bracket must be smaller than the previous one");
+                            throw new Exception("Grade malformed");
+                        }
+                        result[i] = gradeBracket;
+                        enteredNumber = true;
+                    } catch (Exception e) {
+                        JOptionPane.showMessageDialog(null, "Invalid input");
+                    }
+                } else {
+                    throw new Exception("User cancelled");
+                }
+            }
+        }
+        return result;
     }
 
     private void exportGrades(ActionEvent e) throws IOException {
@@ -115,16 +161,19 @@ public class LetterGrades extends JPanel {
         panelContainer = new JPanel();
         panelContainer.setLayout(new GridLayoutManager(3, 1, new Insets(0, 30, 0, 30), -1, -1));
         letterGradeActions = new JPanel();
-        letterGradeActions.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        letterGradeActions.setLayout(new GridLayoutManager(1, 4, new Insets(0, 0, 0, 0), -1, -1));
         panelContainer.add(letterGradeActions, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         exportButton = new JButton();
         exportButton.setText("Export");
-        letterGradeActions.add(exportButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        letterGradeActions.add(exportButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         backButton = new JButton();
         backButton.setText("Back");
-        letterGradeActions.add(backButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        letterGradeActions.add(backButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer1 = new Spacer();
         letterGradeActions.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        changeLetterBracketButton = new JButton();
+        changeLetterBracketButton.setText("Change Letter Bracket");
+        letterGradeActions.add(changeLetterBracketButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         panelContainer.add(letterGradesContainer, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         letterGradesContainer.setViewportView(letterGrades);
         courseName = new JLabel();

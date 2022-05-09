@@ -20,6 +20,8 @@ import java.util.Locale;
 import static javax.swing.JOptionPane.showMessageDialog;
 
 public class AssignmentSelection extends JPanel {
+    private final boolean isLoggedIn;
+    private final GradedClass course;
     private JPanel AssignmentPanel;
     private JPanel spacer;
     private JScrollPane AssignmentTile;
@@ -31,13 +33,7 @@ public class AssignmentSelection extends JPanel {
     private JButton showLetterGradeButton;
     private JLabel courseName;
     private JButton saveChanges;
-
     private DefaultTableModel model;
-
-
-    private boolean isLoggedIn;
-
-    private GradedClass course;
 
     public AssignmentSelection(GradedClass course) {
         //TODO: overload constructor to load data from csv
@@ -57,14 +53,17 @@ public class AssignmentSelection extends JPanel {
         addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
         editAssignmentButton.addActionListener(e -> {
             int removeAt = Assignments.getSelectedRow();
-            if (removeAt >= 0) {
+            // Confirm the removal
+            int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmation == JOptionPane.YES_OPTION) {
                 model.removeRow(removeAt);
+                Assignments = new JTable(model);
+                Assignments.updateUI();
+                AssignmentTile.revalidate();
+                AssignmentTile.updateUI();
             }
-            Assignments = new JTable(model);
-            Assignments.updateUI();
-            AssignmentTile.revalidate();
-            AssignmentTile.updateUI();
         });
+
         logoutButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
 
         this.setVisible(true);
@@ -135,7 +134,7 @@ public class AssignmentSelection extends JPanel {
         addAssignmentButton.setText("Add Assignment");
         AssignmentAction.add(addAssignmentButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         editAssignmentButton = new JButton();
-        editAssignmentButton.setText("Edit Assignment");
+        editAssignmentButton.setText("Delete Assignment");
         AssignmentAction.add(editAssignmentButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Back");

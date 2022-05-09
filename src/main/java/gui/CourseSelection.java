@@ -117,6 +117,7 @@ public class CourseSelection extends JPanel {
             courses.add(course);
             CLASS_PATH_TUPLE.add(new ClassPathTuple(course.getClassName(), filePath));
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             System.out.println("Cannot read from" + filePath);
         }
         CourseTile ct = new CourseTile(courses.get(courses.size() - 1).toString(), tiles.size());

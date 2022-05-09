@@ -81,7 +81,12 @@ public class Assignment extends JPanel {
             firePropertyChange("deleteStudent", null, null);
             int selected = grades.getSelectedRow();
             int BUID = course.getStudents().get(selected).getBUID();
-            course.removeStudentByBUID(BUID);
+            String name = course.getStudents().get(selected).getName();
+            int confirmation = JOptionPane.showConfirmDialog(null,
+                    "Are you sure you want to delete " + name + " from this class?", "Confirmation", JOptionPane.YES_NO_OPTION);
+            if (confirmation == JOptionPane.YES_OPTION) {
+                course.removeStudentByBUID(BUID);
+            }
             updateTable();
         });
     }

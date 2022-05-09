@@ -31,6 +31,8 @@ Group 5 - Baiqing Lyu, Jianqi Ma, Quang Nguyen
 * utils
   * `Assignment`
     * Class design for the assignment object
+  * `ClassPathTuple`
+    * Create a tuple class to bind together a class name and their CSV path
   * `CSVReader`
     * Reads CSV files and outputs the corresponding objects
   * `CSVWriter`

@@ -44,9 +44,29 @@ public class LetterGrades extends JPanel {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         // disable the "All files" option.
         chooser.setAcceptAllFileFilterUsed(false);
+        // set chooser to show select instead of open a file
+        chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+        // remove files of type option
+        chooser.setFileFilter(new javax.swing.filechooser.FileFilter() {
+            @Override
+            public boolean accept(java.io.File f) {
+                return f.isDirectory();
+            }
+
+            @Override
+            public String getDescription() {
+                return null;
+            }
+        });
         if (chooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             String directory = String.valueOf(chooser.getSelectedFile());
             CSVWriter.writeFinalGrades(directory, course.getClassName(), getHeaders(), getValues());
+            // Show success message
+            String fileOutName = directory + "/" + course.getClassName() + ".csv";
+            JOptionPane.showMessageDialog(this,
+                    "Grades exported to: \n" + fileOutName,
+                    "Success!",
+                    JOptionPane.INFORMATION_MESSAGE);
         }
         else {
             System.out.println("No Selection ");

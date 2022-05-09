@@ -23,7 +23,6 @@ public class AssignmentSelection extends JPanel {
     private final boolean isLoggedIn;
     private final GradedClass course;
     private JPanel AssignmentPanel;
-    private JPanel spacer;
     private JScrollPane AssignmentTile;
     private JPanel AssignmentAction;
     private JButton addAssignmentButton;
@@ -33,6 +32,7 @@ public class AssignmentSelection extends JPanel {
     private JButton showLetterGradeButton;
     private JLabel courseName;
     private JButton saveChanges;
+    private JButton changeWeightsButton;
     private DefaultTableModel model;
 
     public AssignmentSelection(GradedClass course) {
@@ -42,7 +42,7 @@ public class AssignmentSelection extends JPanel {
         this.course = course;
 
         $$$setupUI$$$();
-        courseName.setText(course.toString());
+        courseName.setText("Current course: " + course.toString());
 
         Assignments.getSelectionModel().addListSelectionListener(e -> {
             // prevent the following function being called twice
@@ -80,6 +80,10 @@ public class AssignmentSelection extends JPanel {
                 showMessageDialog(null, ex.getMessage());
                 throw new RuntimeException(ex);
             }
+        });
+        //TODO: add functionality to change weights
+        changeWeightsButton.addActionListener(e -> {
+            firePropertyChange("ChangeWeights", null, null);
         });
     }
 
@@ -122,13 +126,8 @@ public class AssignmentSelection extends JPanel {
         createUIComponents();
         AssignmentPanel = new JPanel();
         AssignmentPanel.setLayout(new GridLayoutManager(3, 4, new Insets(0, 0, 0, 0), -1, -1));
-        spacer = new JPanel();
-        spacer.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        AssignmentPanel.add(spacer, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer1 = new Spacer();
-        spacer.add(spacer1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         AssignmentAction = new JPanel();
-        AssignmentAction.setLayout(new GridLayoutManager(1, 5, new Insets(0, 0, 0, 30), -1, -1));
+        AssignmentAction.setLayout(new GridLayoutManager(1, 6, new Insets(0, 0, 0, 30), -1, -1));
         AssignmentPanel.add(AssignmentAction, new GridConstraints(1, 1, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         addAssignmentButton = new JButton();
         addAssignmentButton.setText("Add Assignment");
@@ -138,26 +137,29 @@ public class AssignmentSelection extends JPanel {
         AssignmentAction.add(editAssignmentButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Back");
-        AssignmentAction.add(logoutButton, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        AssignmentAction.add(logoutButton, new GridConstraints(0, 5, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         showLetterGradeButton = new JButton();
         showLetterGradeButton.setText("Show Letter Grade");
-        AssignmentAction.add(showLetterGradeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        AssignmentAction.add(showLetterGradeButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 1, false));
         saveChanges = new JButton();
         saveChanges.setText("Save Changes");
-        AssignmentAction.add(saveChanges, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        AssignmentAction.add(saveChanges, new GridConstraints(0, 4, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        changeWeightsButton = new JButton();
+        changeWeightsButton.setText("Change Weights");
+        AssignmentAction.add(changeWeightsButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         AssignmentPanel.add(AssignmentTile, new GridConstraints(2, 0, 1, 4, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         AssignmentTile.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 30, 30, 30), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         Assignments.setFillsViewportHeight(false);
         AssignmentTile.setViewportView(Assignments);
-        final Spacer spacer2 = new Spacer();
-        AssignmentPanel.add(spacer2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
-        final Spacer spacer3 = new Spacer();
-        AssignmentPanel.add(spacer3, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        AssignmentPanel.add(spacer1, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         courseName = new JLabel();
-        Font courseNameFont = this.$$$getFont$$$("Century Gothic", Font.BOLD, 26, courseName.getFont());
+        Font courseNameFont = this.$$$getFont$$$("SF Pro Display", Font.BOLD, 26, courseName.getFont());
         if (courseNameFont != null) courseName.setFont(courseNameFont);
         courseName.setText("Label");
         AssignmentPanel.add(courseName, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        AssignmentPanel.add(spacer2, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
     }
 
     /**

@@ -24,6 +24,34 @@ Group 5 - Baiqing Lyu, Jianqi Ma, Quang Nguyen
   * User login
   * Material theme
 
+#### Documentation
+* entry
+  * `Main`
+    * Main entry point for the program
+* utils
+  * `Assignment`
+    * Class design for the assignment object
+  * `CSVReader`
+    * Reads CSV files and outputs the corresponding objects
+  * `CSVWriter`
+    * Writes objects to CSV file at specified file paths
+  * `GradedClass`
+    * Class object that contains the students, assignments, and grades
+  * `Semester`
+    * Semester object that holdes classes and information about the semester
+  * `Student`
+    * Student object that holds their respective grades and assignments in addition to their names and ID.
+* gui
+  * `State`
+  * `Assignment`
+  * `AssignmentSelection`
+  * `CourseSelection`
+  * `CourseTitle`
+  * `LetterGrades`
+  * `MainFrame`
+  * `MainFrame`
+  * `SemesterSelection`
+  * `UserLogin`
 #### Work distribution
 
 * Baiqing Lyu

@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static javax.swing.JOptionPane.showMessageDialog;
+import static org.codehaus.plexus.util.StringUtils.isNumeric;
 
 public class AssignmentSelection extends JPanel {
     private final boolean isLoggedIn;
@@ -81,9 +82,20 @@ public class AssignmentSelection extends JPanel {
                 throw new RuntimeException(ex);
             }
         });
-        //TODO: add functionality to change weights
         changeWeightsButton.addActionListener(e -> {
             firePropertyChange("ChangeWeights", null, null);
+            for (Assignment assignment : course.getAssignments()) {
+                String newWeight = JOptionPane.showInputDialog("Enter the new weight for " + assignment.getName() + "\nCurrent weight: " + assignment.getWeight());
+                while (newWeight != null && !isNumeric(newWeight)) {
+                    showMessageDialog(null, "Invalid input");
+                    newWeight = JOptionPane.showInputDialog("Enter the new weight for " + assignment.getName() + "\nCurrent weight: " + assignment.getWeight());
+                }
+                if (newWeight != null) {
+                    assignment.setWeight(Integer.parseInt(newWeight));
+                } else {
+                    break;
+                }
+            }
         });
     }
 

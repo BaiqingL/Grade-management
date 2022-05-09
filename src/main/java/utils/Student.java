@@ -50,6 +50,7 @@ public class Student {
         int finalGrade = (int) cumulative;
         return Integer.toString(finalGrade);
     }
+
     public String getLetterGrade() {
         double cumulative = 0.0;
 
@@ -90,9 +91,6 @@ public class Student {
 
     @Override
     public String toString() {
-        return "Student{" +
-                "name='" + name + '\'' +
-                ", BUID=" + BUID +
-                '}';
+        return "Student{" + "name='" + name + '\'' + ", BUID=" + BUID + '}';
     }
 }

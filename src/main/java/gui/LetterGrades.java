@@ -16,7 +16,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -32,7 +31,7 @@ public class LetterGrades extends JPanel {
 
     private DefaultTableModel model;
 
-    private GradedClass course;
+    private final GradedClass course;
 
     public LetterGrades(GradedClass course) {
         this.course = course;

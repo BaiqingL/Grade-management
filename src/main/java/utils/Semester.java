@@ -1,37 +1,46 @@
 package utils;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Semester {
     private final String year;
     private final String semester;
-    private final List<GradedClass> classes;
+    private final List<String> coursePath;
+    private List<GradedClass> courses;
 
-    public Semester(String year, String semester, List<GradedClass> classes) {
+
+    public Semester(String year, String semester) {
         this.year = year;
         this.semester = semester;
-        this.classes = classes;
+        this.coursePath = new ArrayList<>();
     }
 
-    public String getYear() {
-        return year;
+    public List<GradedClass> getCourses() throws IOException {
+        if (this.courses != null) {
+            return this.courses;
+        }
+        this.courses = new ArrayList<>();
+        for (String path : coursePath) {
+            try {
+                GradedClass course = CSVReader.loadCSV(path);
+                this.courses.add(course);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Cannot read from" + path);
+            }
+        }
+        return courses;
     }
 
-    public String getSemester() {
-        return semester;
+    public void addCourse(ClassPathTuple tuple) {
+        this.coursePath.add(tuple.getPath());
+        this.courses.add(tuple.getCourse());
     }
 
-    public List<GradedClass> getClasses() {
-        return classes;
-    }
 
-    public void addClass(GradedClass c) {
-        classes.add(c);
-    }
-
-    public void removeClass(GradedClass c) {
-        classes.remove(c);
-    }
 
     public String toString() {
         return semester + " " + year;

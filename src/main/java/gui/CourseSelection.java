@@ -2,13 +2,11 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import org.bouncycastle.jcajce.provider.drbg.DRBG;
 import utils.ClassPathTuple;
 import utils.CSVReader;
 import utils.GradedClass;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import javax.swing.plaf.FontUIResource;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.text.StyleContext;
@@ -16,9 +14,6 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Objects;
-
-import static org.codehaus.plexus.util.StringUtils.isNumeric;
 
 public class CourseSelection extends JPanel {
     private JPanel coursePanel;
@@ -31,6 +26,7 @@ public class CourseSelection extends JPanel {
     private JScrollPane courseContainer;
 
     private JTable courseTable;
+    private JButton backButton;
 
     private DefaultTableModel model;
     private boolean isLoggedIn;
@@ -64,6 +60,8 @@ public class CourseSelection extends JPanel {
             firePropertyChange("GUIupdate", 0, 0);
 
         });
+
+        backButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
 
         logoutButton.addActionListener(e -> loggout());
 
@@ -99,12 +97,24 @@ public class CourseSelection extends JPanel {
             GradedClass course = CSVReader.loadCSV(filePath);
             courses.add(course);
             model.addRow(new String[]{course.getClassName(), String.valueOf(course.getAssignments().size()), String.valueOf(course.getStudents().size())});
-            CLASS_PATH_TUPLE.add(new ClassPathTuple(course.getClassName(), filePath));
+            ClassPathTuple newTuple = new ClassPathTuple(course, filePath);
+            CLASS_PATH_TUPLE.add(newTuple);
+            firePropertyChange("addedNewCourse", "", newTuple);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             System.out.println("Cannot read from" + filePath);
         }
 
+    }
+
+    public void populateSemesterCourse(List<GradedClass> coursesToPopulate) {
+        courses = new ArrayList<>();
+        model.setRowCount(0);
+
+        for (GradedClass course : coursesToPopulate) {
+            courses.add(course);
+            model.addRow(new String[]{course.getClassName(), String.valueOf(course.getAssignments().size()), String.valueOf(course.getStudents().size())});
+        }
     }
 
     private void deleteCourse(int idx) {
@@ -120,8 +130,7 @@ public class CourseSelection extends JPanel {
     }
 
     private String[] getHeaders() {
-        String[] headers = {"Name", "Assignment Number", "Students Enrolled"};
-        return headers;
+        return new String[]{"Name", "Assignment Number", "Students Enrolled"};
     }
 
     private void createUIComponents() {
@@ -160,7 +169,7 @@ public class CourseSelection extends JPanel {
         panel1.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
         coursePanel.add(panel1, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         courseActions = new JPanel();
-        courseActions.setLayout(new GridLayoutManager(1, 3, new Insets(0, 30, 0, 30), -1, -1));
+        courseActions.setLayout(new GridLayoutManager(1, 4, new Insets(0, 30, 0, 30), -1, -1));
         panel1.add(courseActions, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         addCourseButton = new JButton();
         addCourseButton.setText("Add Course");
@@ -170,7 +179,10 @@ public class CourseSelection extends JPanel {
         courseActions.add(deleteCourseButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         logoutButton = new JButton();
         logoutButton.setText("Logout");
-        courseActions.add(logoutButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        courseActions.add(logoutButton, new GridConstraints(0, 3, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        backButton = new JButton();
+        backButton.setText("Back");
+        courseActions.add(backButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         coursePanel.add(courseContainer, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         courseContainer.setViewportView(courseTable);
     }

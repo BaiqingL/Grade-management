@@ -54,7 +54,7 @@ public class SemesterSelection extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 assert !semester.getText().equals("") && !year.getText().equals("");
-                Semester newSem = new Semester(year.getText(), semester.getText(), new ArrayList<>());
+                Semester newSem = new Semester(year.getText(), semester.getText());
                 firePropertyChange("newSemesterAdded", null, newSem);
                 firePropertyChange("semesterSelected", null, newSem);
             }

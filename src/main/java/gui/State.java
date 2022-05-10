@@ -10,9 +10,9 @@ public class State {
     private Semester selectedSemester;
 
     public State() {
-        semesters.add(new Semester("2021", "Spring", new ArrayList<>()));
-        semesters.add(new Semester("2021", "Fall", new ArrayList<>()));
-        semesters.add(new Semester("2022", "Spring", new ArrayList<>()));
+        semesters.add(new Semester("2021", "Spring"));
+        semesters.add(new Semester("2021", "Fall"));
+        semesters.add(new Semester("2022", "Spring"));
         selectedSemester = null;
     }
 

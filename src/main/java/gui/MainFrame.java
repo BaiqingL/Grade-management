@@ -1,5 +1,6 @@
 package gui;
 
+import utils.ClassPathTuple;
 import utils.GradedClass;
 import utils.Semester;
 
@@ -8,6 +9,8 @@ import java.awt.*;
 import java.awt.event.ContainerAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
+import java.util.List;
 
 public class MainFrame extends JFrame {
 
@@ -44,10 +47,15 @@ public class MainFrame extends JFrame {
         userLogin.addPropertyChangeListener(evt -> {
             boolean isAuthenticated = (boolean) evt.getNewValue();
             if (isAuthenticated) {
-                semesterSelection.setSemestersList(state.getSemesters());
-                cl.show(panelContainer, "semesterSelectionPage");
+                if (state.getSelectedSemester() == null) {
+                    semesterSelection.setSemestersList(state.getSemesters());
+                    cl.show(panelContainer, "semesterSelectionPage");
+                } else {
+                    cl.show(panelContainer, "courseSelectPage");
+                }
             }
         });
+
         semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
             @Override
             public void propertyChange(PropertyChangeEvent evt) {
@@ -58,6 +66,11 @@ public class MainFrame extends JFrame {
                     state.setSelectedSemester((Semester) evt.getNewValue());
                 }
                 courseSelection.setSemesterLabel(state.getSelectedSemester().toString());
+                try {
+                    courseSelection.populateSemesterCourse(state.getSelectedSemester().getCourses());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 cl.show(panelContainer, "courseSelectPage");
             }
         });
@@ -79,6 +92,29 @@ public class MainFrame extends JFrame {
             }
         });
         panelContainer.addContainerListener(new ContainerAdapter() {
+        });
+
+        courseSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("addedNewCourse")) {
+                    ClassPathTuple newTuple = (ClassPathTuple) evt.getNewValue();
+                    state.getSelectedSemester().addCourse(newTuple);
+                    System.out.println("Course " + newTuple.getClassName() + " is added to semester " + state.getSelectedSemester().toString());
+                }
+            }
+        });
+
+        courseSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("previousPage")) {
+                    cl.show(panelContainer, "semesterSelectionPage");
+                    panelContainer.remove(courseSelection);
+                    panelContainer.revalidate();
+                    panelContainer.updateUI();
+                }
+            }
         });
 
         courseSelection.addPropertyChangeListener(new PropertyChangeListener() {

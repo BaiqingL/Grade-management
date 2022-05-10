@@ -1,16 +1,18 @@
 package utils;
 
 public class ClassPathTuple {
-    private final String className;
+    private final GradedClass course;
     private final String path;
 
-    public ClassPathTuple(String className, String path) {
-        this.className = className;
+    public ClassPathTuple(GradedClass course, String path) {
+        this.course = course;
         this.path = path;
     }
 
+    public GradedClass getCourse() {return this.course;}
+
     public String getClassName() {
-        return className;
+        return course.getClassName();
     }
 
     public String getPath() {

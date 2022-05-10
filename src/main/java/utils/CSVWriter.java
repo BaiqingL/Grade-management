@@ -56,4 +56,14 @@ public class CSVWriter {
         csvPrinter.flush();
         csvPrinter.close();
     }
+
+    public static void writeSemesters(String outputFilePath, String[][] data) throws IOException{
+        String fileOutName = outputFilePath + "/semesters.csv";
+        CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(fileOutName), CSVFormat.DEFAULT);
+        for (String[] row : data) {
+            csvPrinter.printRecord(Arrays.asList(row));
+        }
+        csvPrinter.flush();
+        csvPrinter.close();
+    }
 }

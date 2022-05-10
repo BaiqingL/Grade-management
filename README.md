@@ -68,6 +68,8 @@ src/main/java/utils/Student.java - Student object that holds their respective gr
 ## How to run
 ---------------------------------------------------------------------------
 1. Navigate to the main Project Directory after downloading the files
-2. Run the following instructions on command line:
-	javac *.java
-	java Main.java
+2. Install Apache Maven and JDK 18
+3. Run the following command in the main project directory: `mvn clean compile assembly:single`
+4. The packaged jar will be created in the `target` directory
+5. Click on the jar to open the software, note that the default java version must also be 18
+6. If default version is not, then execute the jar on the command line via `java -jar file.jar`

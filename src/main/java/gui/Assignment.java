@@ -110,7 +110,7 @@ public class Assignment extends JPanel {
         // Refresh the table
         model.setRowCount(0);
         for (Student s : course.getStudents()) {
-            model.addRow(new Object[]{s.getName(), s.getBUID(), s.getAssignments().get(assignmentIdx).getGrade(), s.getAssignments().get(assignmentIdx).getSubmissionDate()});
+            model.addRow(new String[]{s.getName(), String.valueOf(s.getBUID()), String.valueOf(s.getAssignments().get(assignmentIdx).getGrade()), String.valueOf(s.getAssignments().get(assignmentIdx).getSubmissionDate())});
         }
     }
 
@@ -134,15 +134,15 @@ public class Assignment extends JPanel {
         return new String[]{"Name", "BUID", "Score", "Submission Date"};
     }
 
-    private Object[][] getValue() {
-        Object[][] values = new String[course.getStudents().size()][4];
+    private String[][] getValue() {
+        String[][] values = new String[course.getStudents().size()][4];
         List<Student> students = course.getStudents();
 
         for (int i = 0; i < students.size(); i++) {
             utils.Assignment a = students.get(i).getAssignments().get(assignmentIdx);
             System.out.println(a);
             Student s = students.get(i);
-            values[i] = new Object[]{s.getName(), s.getBUID(), a.getGrade(), a.getSubmissionDate()};
+            values[i] = new String[]{s.getName(), String.valueOf(s.getBUID()), String.valueOf(a.getGrade()), String.valueOf(a.getSubmissionDate())};
         }
 
         return values;

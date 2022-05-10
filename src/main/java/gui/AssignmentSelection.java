@@ -3,8 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
-import utils.*;
 import utils.Assignment;
+import utils.*;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -108,7 +108,6 @@ public class AssignmentSelection extends JPanel {
             firePropertyChange("SaveChanges", null, null);
             try {
                 String filePath = CourseSelection.getCourseFilePath(course.getClassName());
-                System.out.println(filePath);
                 CSVWriter.writeGradedClass(course, filePath);
                 showMessageDialog(null, "Class saved successfully");
             } catch (IOException ex) {
@@ -145,17 +144,27 @@ public class AssignmentSelection extends JPanel {
 
     // method to create an assignment
     private void createAssignment(String filePath) {
-        CSVReader.loadCSV(filePath, course);
-        Assignment a = course.getStudents().get(0).getAssignments().get(6);
-        System.out.println("before modifed Course listener: " + a);
+        try {
+            GradedClass temp = CSVReader.loadCSV(filePath);
+            Assignment assignment = temp.getAssignments().get(0);
+            course.addJustAssignment(assignment);
+            for (Student s : temp.getStudents()) {
+                Student target = course.getStudentByBUID(s.getBUID());
+                target.addAssignment(s.getAssignments().get(0));
+            }
+        } catch (IOException ignored) {
+
+        }
         firePropertyChange("modifiedCourse", null, course);
     }
 
     private void updateTable() {
         // Refresh the table
         model.setRowCount(0);
-        for (Assignment a : course.getAssignments()) {
-            model.addRow(new Object[]{a.getName(), a.getAssignedDate(), a.getDueDate(), a.getSubmissionDate()});
+
+        for (int i = 0; i < course.getAssignments().size(); i++) {
+            Assignment a = course.getAssignments().get(i);
+            model.addRow(new String[]{a.getName(), String.valueOf(a.getAssignedDate()), String.valueOf(a.getDueDate()), String.valueOf(a.getSubmissionDate()), String.valueOf(course.getAmountOfStudentsSubmittedAssignment(i))});
         }
     }
 

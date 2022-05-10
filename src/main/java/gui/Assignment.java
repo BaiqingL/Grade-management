@@ -134,14 +134,15 @@ public class Assignment extends JPanel {
         return new String[]{"Name", "BUID", "Score", "Submission Date"};
     }
 
-    private String[][] getValue() {
-        String[][] values = new String[course.getStudents().size()][4];
+    private Object[][] getValue() {
+        Object[][] values = new String[course.getStudents().size()][4];
         List<Student> students = course.getStudents();
 
         for (int i = 0; i < students.size(); i++) {
             utils.Assignment a = students.get(i).getAssignments().get(assignmentIdx);
+            System.out.println(a);
             Student s = students.get(i);
-            values[i] = new String[]{s.getName(), String.valueOf(s.getBUID()), String.valueOf(a.getGrade()), a.getSubmissionDate().toString()};
+            values[i] = new Object[]{s.getName(), s.getBUID(), a.getGrade(), a.getSubmissionDate()};
         }
 
         return values;

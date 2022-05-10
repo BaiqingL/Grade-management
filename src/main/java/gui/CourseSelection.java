@@ -2,6 +2,7 @@ package gui;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import utils.Assignment;
 import utils.CSVReader;
 import utils.ClassPathTuple;
 import utils.GradedClass;
@@ -110,6 +111,14 @@ public class CourseSelection extends JPanel {
             System.out.println("Cannot read from" + filePath);
         }
 
+    }
+
+    private void updateTable() {
+        // Refresh the table
+        model.setRowCount(0);
+        for (GradedClass c : courses) {
+            model.addRow(new Object[]{c.getClassName(), c.getAssignments().size(), c.getStudents().size()});
+        }
     }
 
     private void deleteCourse(int idx) {

@@ -3,9 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import utils.*;
 import utils.Assignment;
-import utils.CSVWriter;
-import utils.GradedClass;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -58,7 +57,21 @@ public class AssignmentSelection extends JPanel {
         });
 
         // Configure add assignment button action
-        addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
+        addAssignmentButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setDialogTitle("Select a CSV file");
+            String filePath = "";
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            }
+
+            createAssignment(filePath);
+
+            updateTable();
+
+        });
 
         // Configure the edit assignment button action
         deleteAssignmentButton.addActionListener(e -> {
@@ -73,12 +86,8 @@ public class AssignmentSelection extends JPanel {
                         selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getAssignmentsAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
                     }
                     course.removeAssignment(Integer.parseInt(selected) - 1);
-                    // Update the table
-                    model.removeRow(Integer.parseInt(selected) - 1);
-                    Assignments = new JTable(model);
-                    Assignments.updateUI();
-                    AssignmentTile.revalidate();
-                    AssignmentTile.updateUI();
+                    updateTable();
+
                 } catch (Exception ignored) {
 
                 }
@@ -134,9 +143,20 @@ public class AssignmentSelection extends JPanel {
         return sb.toString();
     }
 
-    // Dummy method to create an assignment
-    private String[] createAssignment() {
-        return new String[]{"Assignment 3", "March 19, 2022", "April 19, 2022", "198"};
+    // method to create an assignment
+    private void createAssignment(String filePath) {
+        CSVReader.loadCSV(filePath, course);
+        Assignment a = course.getStudents().get(0).getAssignments().get(6);
+        System.out.println("before modifed Course listener: " + a);
+        firePropertyChange("modifiedCourse", null, course);
+    }
+
+    private void updateTable() {
+        // Refresh the table
+        model.setRowCount(0);
+        for (Assignment a : course.getAssignments()) {
+            model.addRow(new Object[]{a.getName(), a.getAssignedDate(), a.getDueDate(), a.getSubmissionDate()});
+        }
     }
 
     // Checks value to be shown in tables

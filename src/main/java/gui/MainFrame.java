@@ -129,6 +129,12 @@ public class MainFrame extends JFrame {
                                 panelContainer.revalidate();
                                 panelContainer.updateUI();
                             }
+
+                            if (evt.getPropertyName().equals("modifiedCourse")) {
+                                course = (GradedClass) evt.getNewValue();
+                                utils.Assignment a = course.getStudents().get(0).getAssignments().get(6);
+                                System.out.println("in modifed Course listener: " + a);
+                            }
                         }
                     });
 
@@ -200,4 +206,5 @@ public class MainFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return panelContainer;
     }
+
 }

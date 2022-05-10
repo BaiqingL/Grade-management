@@ -3,9 +3,8 @@ package gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
+import utils.*;
 import utils.Assignment;
-import utils.CSVWriter;
-import utils.GradedClass;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -16,6 +15,7 @@ import java.awt.*;
 import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 import static javax.swing.JOptionPane.showMessageDialog;
 import static org.codehaus.plexus.util.StringUtils.isNumeric;
@@ -57,25 +57,39 @@ public class AssignmentSelection extends JPanel {
         });
 
         // Configure add assignment button action
-        addAssignmentButton.addActionListener(e -> model.addRow(createAssignment()));
+        addAssignmentButton.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+            fileChooser.setDialogTitle("Select a CSV file");
+            String filePath = "";
+            int result = fileChooser.showOpenDialog(null);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                filePath = fileChooser.getSelectedFile().getAbsolutePath();
+            }
+
+            createAssignment(filePath);
+
+            updateTable();
+
+        });
 
         // Configure the edit assignment button action
         deleteAssignmentButton.addActionListener(e -> {
-            int removeAt = Assignments.getSelectedRow();
-            if (removeAt == -1) {
-                JOptionPane.showMessageDialog(AssignmentPanel, "No assignments selected");
+            if (Assignments.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No assignments to delete");
             } else {
-                // Confirm the removal
-                int confirmation = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this assignment?", "Confirmation", JOptionPane.YES_NO_OPTION);
-                if (confirmation == JOptionPane.YES_OPTION) {
-                    // Remove the assignment, and update the table
-                    course.removeAssignment(removeAt);
-                    // Update the table
-                    model.removeRow(removeAt);
-                    Assignments = new JTable(model);
-                    Assignments.updateUI();
-                    AssignmentTile.revalidate();
-                    AssignmentTile.updateUI();
+                String selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getAssignmentsAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                // Make sure the input is a number
+                try {
+                    while (selected != null && !isNumeric(selected) || Integer.parseInt(Objects.requireNonNull(selected)) > Assignments.getRowCount() || Integer.parseInt(Objects.requireNonNull(selected)) == 0) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+                        selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getAssignmentsAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                    }
+                    course.removeAssignment(Integer.parseInt(selected) - 1);
+                    updateTable();
+
+                } catch (Exception ignored) {
+
                 }
             }
         });
@@ -121,9 +135,28 @@ public class AssignmentSelection extends JPanel {
         });
     }
 
-    // Dummy method to create an assignment
-    private String[] createAssignment() {
-        return new String[]{"Assignment 3", "March 19, 2022", "April 19, 2022", "198"};
+    private String getAssignmentsAndIndex() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < course.getAssignments().size(); i++) {
+            sb.append(i + 1).append(". ").append(course.getAssignments().get(i).getName()).append("\n");
+        }
+        return sb.toString();
+    }
+
+    // method to create an assignment
+    private void createAssignment(String filePath) {
+        CSVReader.loadCSV(filePath, course);
+        Assignment a = course.getStudents().get(0).getAssignments().get(6);
+        System.out.println("before modifed Course listener: " + a);
+        firePropertyChange("modifiedCourse", null, course);
+    }
+
+    private void updateTable() {
+        // Refresh the table
+        model.setRowCount(0);
+        for (Assignment a : course.getAssignments()) {
+            model.addRow(new Object[]{a.getName(), a.getAssignedDate(), a.getDueDate(), a.getSubmissionDate()});
+        }
     }
 
     // Checks value to be shown in tables

@@ -1,5 +1,6 @@
 package gui;
 
+import utils.CSVWriter;
 import utils.ClassPathTuple;
 import utils.GradedClass;
 import utils.Semester;
@@ -10,6 +11,7 @@ import java.awt.event.ContainerAdapter;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.List;
 
 public class MainFrame extends JFrame {
@@ -48,7 +50,9 @@ public class MainFrame extends JFrame {
             boolean isAuthenticated = (boolean) evt.getNewValue();
             if (isAuthenticated) {
                 if (state.getSelectedSemester() == null) {
-                    semesterSelection.setSemestersList(state.getSemesters());
+                    if (!state.getSemesters().isEmpty()) {
+                        semesterSelection.setSemestersList(state.getSemesters());
+                    }
                     cl.show(panelContainer, "semesterSelectionPage");
                 } else {
                     cl.show(panelContainer, "courseSelectPage");
@@ -61,17 +65,49 @@ public class MainFrame extends JFrame {
             public void propertyChange(PropertyChangeEvent evt) {
                 if (evt.getPropertyName().equals("semesterSelected")) {
                     state.setSelectedSemester((Semester) evt.getNewValue());
+                    courseSelection.setSemesterLabel(state.getSelectedSemester().toString());
+                    try {
+                        courseSelection.populateSemesterCourse(state.getSelectedSemester().getCourses(), state.getSelectedSemester().getCoursePaths());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    cl.show(panelContainer, "courseSelectPage");
+
                 } else if (evt.getPropertyName().equals("newSemesterAdded")) {
                     state.addSemester((Semester) evt.getNewValue());
-                    state.setSelectedSemester((Semester) evt.getNewValue());
+                    try {
+                        CSVWriter.writeSemesters(state);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    semesterSelection.setSemestersList(state.getSemesters());
+                    courseSelection.setSemesterLabel(state.getSelectedSemester().toString());
+                    try {
+                        courseSelection.populateSemesterCourse(state.getSelectedSemester().getCourses(), state.getSelectedSemester().getCoursePaths());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    cl.show(panelContainer, "courseSelectPage");
+
                 }
-                courseSelection.setSemesterLabel(state.getSelectedSemester().toString());
-                try {
-                    courseSelection.populateSemesterCourse(state.getSelectedSemester().getCourses());
-                } catch (IOException e) {
-                    e.printStackTrace();
+            }
+        });
+
+        semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("semestersLoaded")) {
+                    state.getSemesters().addAll((Collection<? extends Semester>) evt.getNewValue());
                 }
-                cl.show(panelContainer, "courseSelectPage");
+            }
+        });
+
+        semesterSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("semestersFilePath")) {
+                    state.setSemestersFilePath((String) evt.getNewValue());
+                }
             }
         });
 
@@ -100,7 +136,28 @@ public class MainFrame extends JFrame {
                 if (evt.getPropertyName().equals("addedNewCourse")) {
                     ClassPathTuple newTuple = (ClassPathTuple) evt.getNewValue();
                     state.getSelectedSemester().addCourse(newTuple);
+                    try {
+                        CSVWriter.writeSemesters(state);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     System.out.println("Course " + newTuple.getClassName() + " is added to semester " + state.getSelectedSemester().toString());
+                }
+            }
+        });
+
+        courseSelection.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if (evt.getPropertyName().equals("deleteCourse")) {
+                    ClassPathTuple toDelete = (ClassPathTuple) evt.getNewValue();
+                    state.getSelectedSemester().deleteCourse(toDelete);
+                    try {
+                        CSVWriter.writeSemesters(state);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println("Course " + toDelete.getClassName() + " deleted from semester " + state.getSelectedSemester().toString());
                 }
             }
         });
@@ -164,6 +221,12 @@ public class MainFrame extends JFrame {
                                 panelContainer.remove(assignmentSelection);
                                 panelContainer.revalidate();
                                 panelContainer.updateUI();
+                            }
+
+                            if (evt.getPropertyName().equals("modifiedCourse")) {
+                                course = (GradedClass) evt.getNewValue();
+                                utils.Assignment a = course.getStudents().get(0).getAssignments().get(6);
+                                System.out.println("in modifed Course listener: " + a);
                             }
                         }
                     });
@@ -236,4 +299,5 @@ public class MainFrame extends JFrame {
     public JComponent $$$getRootComponent$$$() {
         return panelContainer;
     }
+
 }

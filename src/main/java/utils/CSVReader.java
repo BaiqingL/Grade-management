@@ -60,6 +60,25 @@ public record CSVReader(String fileName) {
         return new GradedClass(className, students, assignments);
     }
 
+
+    public static void loadCSV(String filePath, GradedClass course) {
+        try {
+            GradedClass temp = loadCSV(filePath);
+            Assignment newAssignment = temp.getAssignments().get(0);
+            System.out.println(newAssignment);
+            course.addAssignment(newAssignment);
+            for (Student s: temp.getStudents()) {
+                System.out.println(s.getAssignments().get(0));
+                if (!course.addAssignmentToStudent(s.getBUID(), s.getAssignments().get(0))) {
+                    course.addStudent(s);
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println("Cannot read from " + filePath);
+        }
+
+    }
     private List<CSVRecord> parse() throws IOException {
         Reader in = new FileReader(fileName);
         Iterable<CSVRecord> records = CSVFormat.DEFAULT.parse(in);
@@ -68,6 +87,25 @@ public record CSVReader(String fileName) {
             list.add(record);
         }
         return list;
+    }
+
+    public static List<Semester> loadSemesters(String filePath) throws IOException {
+        CSVReader csvReader = new CSVReader(filePath);
+        List<CSVRecord> records = csvReader.parse();
+        List<Semester> semesters = new ArrayList<>();
+
+        for (CSVRecord record : records) {
+            Semester sem = new Semester(record.get(0),record.get(1));
+            if (!record.get(2).equals("")) {
+                String[] paths = record.get(2).split(";");
+                sem.getCoursePathList().addAll(List.of(paths));
+            }
+            semesters.add(sem);
+        }
+
+        return semesters;
+
+
     }
 
 }

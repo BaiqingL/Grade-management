@@ -126,7 +126,12 @@ public class GradedClass {
     }
 
     public void addAssignment(Assignment assignment) {
+
         assignments.add(assignment);
+
+        for (Student s: students) {
+            s.addAssignment(assignment);
+        }
     }
 
     public void removeStudentByBUID(int id) {
@@ -136,6 +141,25 @@ public class GradedClass {
                 return;
             }
         }
+    }
+
+    public Student getStudentByBUID(int id) {
+        for (Student s: students) {
+            if (s.getBUID() == id) {
+                return s;
+            }
+        }
+        return null;
+    }
+
+    public boolean addAssignmentToStudent(int id, Assignment a) {
+        for (Student s: students) {
+            if (s.getBUID() == id) {
+                s.addAssignment(a);
+                return true;
+            }
+        }
+        return false;
     }
 
     public String toString() {

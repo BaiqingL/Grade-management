@@ -1,5 +1,7 @@
 package utils;
 
+import com.google.common.reflect.ClassPath;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -12,7 +14,7 @@ public class Semester {
     private List<GradedClass> courses;
 
 
-    public Semester(String year, String semester) {
+    public Semester(String semester, String year) {
         this.year = year;
         this.semester = semester;
         this.coursePath = new ArrayList<>();
@@ -40,9 +42,28 @@ public class Semester {
         this.courses.add(tuple.getCourse());
     }
 
+    public void deleteCourse(ClassPathTuple tuple) {
+        this.courses.remove(tuple.getCourse());
+        this.coursePath.remove(tuple.getPath());
+    }
 
+    public List<String> getCoursePathList() {
+        return this.coursePath;
+    }
 
     public String toString() {
         return semester + " " + year;
+    }
+
+    public List<String> getCoursePaths() {
+        return this.coursePath;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public String getSemester() {
+        return semester;
     }
 }

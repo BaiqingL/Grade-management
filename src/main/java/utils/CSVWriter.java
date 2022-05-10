@@ -1,5 +1,7 @@
 package utils;
 
+import com.sun.nio.sctp.SendFailedNotification;
+import gui.State;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -57,9 +59,22 @@ public class CSVWriter {
         csvPrinter.close();
     }
 
-    public static void writeSemesters(String outputFilePath, String[][] data) throws IOException{
-        String fileOutName = outputFilePath + "/semesters.csv";
+    public static void writeSemesters(State state) throws IOException{
+        String fileOutName = state.getSemestersFilePath();
+        System.out.println(fileOutName);
         CSVPrinter csvPrinter = new CSVPrinter(new FileWriter(fileOutName), CSVFormat.DEFAULT);
+        List<Semester> semesters = state.getSemesters();
+        String[][] data = new String[semesters.size()][3];
+        for (int i = 0; i < semesters.size(); i++) {
+            Semester sem = semesters.get(i);
+            data[i][0] = sem.getSemester();
+            data[i][1] = sem.getYear();
+            StringBuilder sb = new StringBuilder();
+            for (String path : sem.getCoursePathList()) {
+                sb.append(path).append(";");
+            }
+            data[i][2] = sb.toString();
+        }
         for (String[] row : data) {
             csvPrinter.printRecord(Arrays.asList(row));
         }

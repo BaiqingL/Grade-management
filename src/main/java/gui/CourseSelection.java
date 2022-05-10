@@ -4,6 +4,7 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import utils.ClassPathTuple;
 import utils.CSVReader;
+import utils.ClassPathTuple;
 import utils.GradedClass;
 
 import javax.swing.*;
@@ -14,8 +15,12 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
+
+import static org.apache.maven.shared.utils.StringUtils.isNumeric;
 
 public class CourseSelection extends JPanel {
+    private static List<ClassPathTuple> CLASS_PATH_TUPLE = new ArrayList<>();
     private JPanel coursePanel;
     private JButton addCourseButton;
     private JButton deleteCourseButton;
@@ -24,18 +29,13 @@ public class CourseSelection extends JPanel {
     private JPanel spacer;
     private JLabel semester;
     private JScrollPane courseContainer;
-
     private JTable courseTable;
     private JButton backButton;
 
     private DefaultTableModel model;
     private boolean isLoggedIn;
-
     private List<GradedClass> courses;
-
-    private int count = 0;
-
-    private static final List<ClassPathTuple> CLASS_PATH_TUPLE = new ArrayList<>();
+    private final int count = 0;
 
     public CourseSelection() {
 
@@ -55,10 +55,21 @@ public class CourseSelection extends JPanel {
             firePropertyChange("GUIupdate", 0, 0);
         });
         deleteCourseButton.addActionListener(e -> {
+            if (courseTable.getRowCount() == 0) {
+                JOptionPane.showMessageDialog(null, "No courses to delete");
+            } else {
+                String selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                // Make sure the input is a number
+                try {
+                    while (selected != null && !isNumeric(selected) || Integer.parseInt(Objects.requireNonNull(selected)) > courseTable.getRowCount() || Integer.parseInt(Objects.requireNonNull(selected)) == 0) {
+                        JOptionPane.showMessageDialog(null, "Please enter a valid number", "Error", JOptionPane.ERROR_MESSAGE);
+                        selected = JOptionPane.showInputDialog(null, "Select a course to delete: \n" + getCoursesAndIndex(), "Delete Course", JOptionPane.QUESTION_MESSAGE);
+                    }
+                    deleteCourse(Integer.parseInt(selected) - 1);
+                } catch (Exception ignored) {
 
-            deleteCourse(courseTable.getSelectedRow());
-            firePropertyChange("GUIupdate", 0, 0);
-
+                }
+            }
         });
 
         backButton.addActionListener(e -> firePropertyChange("previousPage", null, null));
@@ -75,14 +86,6 @@ public class CourseSelection extends JPanel {
 
     }
 
-    private String getCoursesAndIndex() {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < courses.size(); i++) {
-            sb.append(i + 1).append(": ").append(courses.get(i).getClassName()).append("\n");
-        }
-        return sb.toString();
-    }
-
     public static String getCourseFilePath(String assignmentName) {
         for (ClassPathTuple tuple : CLASS_PATH_TUPLE) {
             if (tuple.getClassName().equals(assignmentName)) {
@@ -90,6 +93,14 @@ public class CourseSelection extends JPanel {
             }
         }
         return null;
+    }
+
+    private String getCoursesAndIndex() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < courses.size(); i++) {
+            sb.append(i + 1).append(": ").append(courses.get(i).getClassName()).append("\n");
+        }
+        return sb.toString();
     }
 
     private void addCourse(String filePath) {
@@ -107,21 +118,27 @@ public class CourseSelection extends JPanel {
 
     }
 
-    public void populateSemesterCourse(List<GradedClass> coursesToPopulate) {
+    public void populateSemesterCourse(List<GradedClass> coursesToPopulate, List<String> paths) {
         courses = new ArrayList<>();
         model.setRowCount(0);
+        CLASS_PATH_TUPLE = new ArrayList<>();
 
-        for (GradedClass course : coursesToPopulate) {
+        assert coursesToPopulate.size() == paths.size();
+        for (int i = 0; i < coursesToPopulate.size(); i++) {
+            GradedClass course = coursesToPopulate.get(i);
             courses.add(course);
             model.addRow(new String[]{course.getClassName(), String.valueOf(course.getAssignments().size()), String.valueOf(course.getStudents().size())});
+            ClassPathTuple newTuple = new ClassPathTuple(course, paths.get(i));
+            CLASS_PATH_TUPLE.add(newTuple);
         }
     }
 
     private void deleteCourse(int idx) {
 
         model.removeRow(idx);
+        ClassPathTuple toDelete = CLASS_PATH_TUPLE.get(idx);
         courses.remove(idx);
-
+        firePropertyChange("deleteCourse", null, toDelete);
     }
 
     private void loggout() {

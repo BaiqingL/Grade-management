@@ -164,7 +164,7 @@ public class AssignmentSelection extends JPanel {
 
         for (int i = 0; i < course.getAssignments().size(); i++) {
             Assignment a = course.getAssignments().get(i);
-            model.addRow(new String[]{a.getName(), String.valueOf(a.getAssignedDate()), String.valueOf(a.getDueDate()), String.valueOf(a.getSubmissionDate()), String.valueOf(course.getAmountOfStudentsSubmittedAssignment(i))});
+            model.addRow(new String[]{a.getName(), String.valueOf(a.getAssignedDate()), String.valueOf(a.getDueDate()), String.valueOf(course.getAmountOfStudentsSubmittedAssignment(i)), String.valueOf(a.getSubmissionDate())});
         }
     }
 
